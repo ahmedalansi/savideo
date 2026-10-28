@@ -2,7 +2,7 @@
 // string hides that link everywhere it is used.
 
 /** Your Ko-fi page, e.g. "https://ko-fi.com/yourname". */
-export const DONATE_URL = "";
+export const DONATE_URL = "https://ko-fi.com/savideo";
 
 export type ToolId = "vpn" | "compressor";
 
@@ -16,7 +16,7 @@ export const TOOLS: { id: ToolId; url: string }[] = [
  * What sits under the countdown when the free limit is used up:
  * "donate", a tool id, "apps" (the extension/app page) or null for nothing.
  */
-export const GATE_SLOT: "donate" | "apps" | ToolId | null = "apps";
+export const GATE_SLOT: "donate" | "apps" | ToolId | null = "donate";
 
 export const activeTools = TOOLS.filter((t) => t.url);
 export const toolUrl = (id: ToolId) => TOOLS.find((t) => t.id === id)?.url ?? "";
