@@ -610,7 +610,7 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
     async def lifespan(app: FastAPI):
         redis = Redis.from_url(settings.redis_url, decode_responses=True)
         db = await Database.connect(settings.database_url)
-        app.state.ctx = Ctx(settings, redis, db, extractor or YtDlpExtractor())
+        app.state.ctx = Ctx(settings, redis, db, extractor or YtDlpExtractor(settings.cookies_file))
         task = jobs.start(app.state.ctx) if settings.jobs_enabled else None
         try:
             yield

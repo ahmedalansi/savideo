@@ -7,7 +7,7 @@ export interface PlatformDef {
   audio: boolean;
 }
 
-// The brief's seven. Host matching here is only for instant feedback in the
+// The brief's seven, plus Instagram. Host matching here is only for instant feedback in the
 // browser; the API does the authoritative check.
 export const PLATFORMS: PlatformDef[] = [
   { id: "youtube", name: "YouTube", hosts: ["youtube.com", "youtu.be", "youtube-nocookie.com"], audio: true },
@@ -17,6 +17,7 @@ export const PLATFORMS: PlatformDef[] = [
   { id: "dailymotion", name: "Dailymotion", hosts: ["dailymotion.com", "dai.ly"], audio: true },
   { id: "bilibili", name: "Bilibili", hosts: ["bilibili.com", "b23.tv"], audio: true },
   { id: "twitch", name: "Twitch", hosts: ["twitch.tv"], audio: true },
+  { id: "instagram", name: "Instagram", hosts: ["instagram.com", "instagr.am"], audio: true },
 ];
 
 export function parseUrl(raw: string): URL | null {

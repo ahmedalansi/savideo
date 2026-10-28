@@ -96,7 +96,7 @@ async def main() -> int:
     from .main import Ctx
 
     s = get_settings()
-    c = Ctx(s, Redis.from_url(s.redis_url, decode_responses=True), await Database.connect(s.database_url), YtDlpExtractor())
+    c = Ctx(s, Redis.from_url(s.redis_url, decode_responses=True), await Database.connect(s.database_url), YtDlpExtractor(s.cookies_file))
     try:
         # A candidate yt-dlp is being tested: report only, never pause platforms.
         results = await run_canary(c, record=False)

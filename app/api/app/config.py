@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     # Residential proxy URL with a {session} placeholder for sticky sessions,
     # e.g. http://user-session-{session}:pass@gate.example:7000
     proxy_url: str | None = None
+    # Netscape cookies.txt passed to yt-dlp (Instagram often needs a logged-in session).
+    cookies_file: str | None = None
     # Where FFmpeg reaches this service for chunked relays of upstream files.
     internal_base: str = "http://127.0.0.1:8000"
 
