@@ -7,7 +7,7 @@ export function GET(req: Request) {
   const safe = title.replace(/[\\/:*?"<>|\u0000-\u001f]+/g, " ").replace(/\s+/g, " ").trim() || "video";
   const name = `${safe} ${label} (demo).txt`;
   const ascii = name.replace(/[^\x20-\x7e]/g, "_");
-  const body = `Naqi demo file\n\nThis stands in for "${title}" (${label}, ${q.get("ext")}).\nReal files arrive once the backend is connected.\n`;
+  const body = `savideo demo file\n\nThis stands in for "${title}" (${label}, ${q.get("ext")}).\nReal files arrive once the backend is connected.\n`;
   return new Response(body, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",

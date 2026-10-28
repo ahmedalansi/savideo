@@ -1,6 +1,6 @@
 #!/bin/sh
 # After `docker compose up -d --build`: checks the site, the API and TLS from outside.
-# Usage: scripts/smoke.sh naqi.example api.naqi.example   (extra curl flags via CURL_OPTS)
+# Usage: scripts/smoke.sh savideo.example api.savideo.example   (extra curl flags via CURL_OPTS)
 set -uf  # -f: CURL_OPTS may hold a literal *
 WEB=${1:?site domain}; API=${2:?api domain}
 fail=0

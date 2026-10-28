@@ -1,4 +1,4 @@
-# Naqi API
+# savideo API
 
 FastAPI service from `replica/architecture.md`: yt-dlp reads the video, FFmpeg merges, trims and encodes MP3, and the file is **streamed to the browser without being stored**. Redis holds the free-download counters, caches and download tokens; Postgres holds takedowns, the blocklist, platform switches and anonymous usage counts.
 

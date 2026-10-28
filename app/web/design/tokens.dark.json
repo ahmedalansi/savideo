@@ -1,5 +1,5 @@
 {
-  "_about": "Naqi dark theme. Same role names as tokens.json, only colour values differ. Everything else (type, space, radius) comes from tokens.json.",
+  "_about": "savideo dark theme. Same role names as tokens.json, only colour values differ. Everything else (type, space, radius) comes from tokens.json.",
   "color": {
     "bg": "#0c1315",
     "surface": "#131c1f",

@@ -2,7 +2,7 @@ import { Chrome, Smartphone } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { ButtonLink } from "@/components/ui/Button";
 
-export const metadata = { title: "Extension and app | Naqi" };
+export const metadata = { title: "Extension and app | savideo" };
 
 export default function AppsPage() {
   return (

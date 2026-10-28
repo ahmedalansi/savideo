@@ -1,4 +1,4 @@
-# Launch plan: Naqi
+# Launch plan: savideo
 
 Written 2026-10-26 by /replica-launch.
 
@@ -7,7 +7,7 @@ Written 2026-10-26 by /replica-launch.
 | # | item | status |
 | --- | --- | --- |
 | 1 | Lawyer review of Terms, Privacy, Copyright pages, plus Arabic versions | open (blocker in `parity.md`) |
-| 2 | Trademark and domain checks for "Naqi", including the Kuwaiti water brand in class 32 | open (`brand.md`) |
+| 2 | Trademark and domain checks for "savideo". The name is very close to the original site (savevideo.net), so check for confusing similarity before launch | open (`brand.md`) |
 | 3 | Live test from the VPS through the residential proxy, all 7 platforms | open (no platform access from this workspace) |
 | 4 | Run the full e2e suite, including the new `f09-clean.spec.ts` | open |
 | 5 | Home page JS under 100 KB (now 132 KB) and resolve under 3 s at p50 | open, for /replica-deploy |
@@ -15,7 +15,7 @@ Written 2026-10-26 by /replica-launch.
 
 ## Waitlist and beta (weeks 1 to 2)
 
-- Add one email field to the landing page: "Tell me when Naqi opens". Use a privacy-friendly list (for example Buttondown or a self-hosted form) and say in one line what you will send. No pre-ticked boxes.
+- Add one email field to the landing page: "Tell me when savideo opens". Use a privacy-friendly list (for example Buttondown or a self-hosted form) and say in one line what you will send. No pre-ticked boxes.
 - Invite 20 to 50 people you know who download videos for work: teachers, video editors, social media managers. These were the use cases that came up in the research.
 - Ask each beta user, in their words, whether we may quote them. Only those quotes ever go on the page.
 
@@ -30,7 +30,7 @@ Written 2026-10-26 by /replica-launch.
 
 From the research (`fixes.md`): Trustpilot pages of the ad-heavy sites, and AlternativeTo's list of alternatives. Reddit and Hacker News could not be read from this workspace, so check these by hand before posting:
 
-- **AlternativeTo:** add Naqi as an alternative under the big downloader sites. This is where people actively look for a replacement.
+- **AlternativeTo:** add savideo as an alternative under the big downloader sites. This is where people actively look for a replacement.
 - **Reddit:** communities about downloading and archiving video, and Arabic tech communities. Read each one's rules first; many ban self-promotion or downloader links outright.
 - **Arabic audience:** Hsoub I/O (io.hsoub.com), Arabic tech accounts on X, and Telegram tech channels. The product is bilingual from day one, which most competitors are not.
 
@@ -39,18 +39,18 @@ Never post fake reviews, never answer complaints on a competitor's page with our
 ## Launch posts that lead with the fix
 
 **Show HN** (only after blockers 1 and 3):
-"Show HN: Naqi, a video downloader with no ads, no pop-ups and nothing to install". Body: why (every site in this category hides the button behind ads), what it does, that it is built on yt-dlp and FFmpeg (credit them plainly), the free limit and why it exists, what we log. Expect questions on copyright and platform terms; answer them straight.
+"Show HN: savideo, a video downloader with no ads, no pop-ups and nothing to install". Body: why (every site in this category hides the button behind ads), what it does, that it is built on yt-dlp and FFmpeg (credit them plainly), the free limit and why it exists, what we log. Expect questions on copyright and platform terms; answer them straight.
 
 **Product Hunt:** check its current guidelines on download tools before preparing a post; if allowed, tagline "One link, one file, no ads." Same rule: no fake upvotes, no asking friends to vote.
 
-**Arabic post:** "نقي: الصق الرابط، خذ الملف، وانتهى. بلا إعلانات ولا نوافذ منبثقة ولا تثبيت."
+**Arabic post:** "savideo: الصق الرابط، خذ الملف، وانتهى. بلا إعلانات ولا نوافذ منبثقة ولا تثبيت."
 
 ## The first 10 users, by hand
 
 Talk to 10 people (a 15-minute call or chat) in the first two weeks. Pick 4 teachers or trainers, 3 video editors or social media people, 3 everyday users. Ask:
 
 1. What did you use before, and what made you stop?
-2. Watch them use Naqi with a link of their own (one they have the right to save). Do not help.
+2. Watch them use savideo with a link of their own (one they have the right to save). Do not help.
 3. Did anything make you hesitate or not trust it?
 4. Did you hit the hourly limit? What did you do?
 5. Would you pay $3 a month to remove it? Why or why not?

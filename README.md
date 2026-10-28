@@ -1,4 +1,4 @@
-# Naqi (نقي)
+# savideo
 
 A clean video downloader: paste a link, pick a quality (up to 4K), optionally trim, download. Built clean-room: no code, text, logo or design copied from any existing site.
 
