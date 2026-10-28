@@ -275,6 +275,12 @@ def test_channel_block_and_unblock(http):
     ticket(http, m, "v720")
 
 
+def test_instagram_reel_resolves(http):
+    m = resolve(http, "https://www.instagram.com/reel/C1a2B3c4D5e/?igsh=abc")
+    assert m["platform"] == "instagram"
+    assert m["formats"]
+
+
 def test_platform_switch_off_and_stats(http):
     admin = {"Authorization": f"Bearer {ADMIN}"}
     r = http.patch("/v1/admin/platforms/reddit", json={"enabled": False}, headers=admin)

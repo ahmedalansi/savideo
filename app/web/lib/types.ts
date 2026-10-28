@@ -1,7 +1,7 @@
 // Shapes match the API contract in replica/architecture.md, so the fake and
 // the real data layer are interchangeable.
 
-export type PlatformId = "youtube" | "facebook" | "x" | "reddit" | "dailymotion" | "bilibili" | "twitch";
+export type PlatformId = "youtube" | "facebook" | "x" | "reddit" | "dailymotion" | "bilibili" | "twitch" | "instagram";
 
 export type FormatKind = "video" | "audio";
 

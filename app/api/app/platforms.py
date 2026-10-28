@@ -1,4 +1,4 @@
-"""The seven platforms: which hosts belong to each, and how to read a video id from a link.
+"""The supported platforms: which hosts belong to each, and how to read a video id from a link.
 
 Only links whose host matches an enabled platform ever reach yt-dlp, so the
 server cannot be pointed at internal addresses (and yt-dlp's generic extractor
@@ -32,6 +32,8 @@ DEFAULTS: dict[str, Platform] = {
         Platform("twitch", "Twitch"),
         Platform("bilibili", "Bilibili"),
         Platform("dailymotion", "Dailymotion"),
+        # Instagram blocks data-centre IPs quickly, so it retries through the proxy like YouTube.
+        Platform("instagram", "Instagram", use_proxy=True),
     ]
 }
 
@@ -43,10 +45,11 @@ HOSTS: dict[str, tuple[str, ...]] = {
     "dailymotion": ("dailymotion.com", "dai.ly"),
     "bilibili": ("bilibili.com", "b23.tv"),
     "twitch": ("twitch.tv",),
+    "instagram": ("instagram.com", "instagr.am"),
 }
 
 # Query parameters that only track the visitor; dropped so the cache key is stable.
-_TRACKING = re.compile(r"^(utm_.*|si|feature|fbclid|igshid|ref|ref_src|share_id|s|t|pp)$")
+_TRACKING = re.compile(r"^(utm_.*|si|feature|fbclid|igshid|igsh|ref|ref_src|share_id|s|t|pp)$")
 
 
 def parse_url(raw: str) -> str | None:
@@ -96,6 +99,7 @@ _ID_PATTERNS: dict[str, list[re.Pattern]] = {
     "bilibili": [re.compile(r"/video/(BV[A-Za-z0-9]+|av\d+)")],
     "twitch": [re.compile(r"/videos/(\d+)"), re.compile(r"/clip/([A-Za-z0-9_-]+)"), re.compile(r"clips\.twitch\.tv/([A-Za-z0-9_-]+)")],
     "facebook": [re.compile(r"/(?:videos|reel|watch/\?v=)/?(\d+)"), re.compile(r"[?&]v=(\d+)")],
+    "instagram": [re.compile(r"/(?:p|reels?|tv)/([A-Za-z0-9_-]+)")],
 }
 
 

@@ -1,7 +1,7 @@
 import pytest
 
 from app.errors import ApiError
-from app.extractor import build_media, classify_error
+from app.extractor import build_media, classify_error, is_bot_block
 from app.platforms import DEFAULTS, detect_platform, is_playlist, media_key_from_url, normalize, parse_url
 from app.streaming import content_disposition, parse_range, safe_title
 
@@ -67,6 +67,7 @@ def test_live_and_playlist_refused():
     ("ERROR: [youtube] x: Video unavailable. This video has been removed by the uploader", "removed_video"),
     ("ERROR: [youtube] x: This live event will begin in 3 hours.", "live_stream"),
     ("ERROR: [youtube] x: The uploader has not made this video available in your country", "geo_blocked"),
+    ("ERROR: [Instagram] C1: Requested content is not available, rate-limit reached or login required", "platform_down"),
     ("something odd", "platform_down"),
 ])
 def test_classify_error(msg, code):
@@ -85,6 +86,18 @@ def test_urls():
     assert not is_playlist("https://www.youtube.com/watch?v=abc&list=PL1")
     assert media_key_from_url("https://youtube.com/shorts/dQw4w9WgXcQ") == "dQw4w9WgXcQ"
     assert media_key_from_url("https://x.com/a/status/1234567890") == "1234567890"
+
+
+def test_instagram_links():
+    assert detect_platform("https://www.instagram.com/reel/C1a2B3c4D5e/?igsh=abc") == "instagram"
+    assert detect_platform(parse_url("instagr.am/p/C1a2B3c4D5e")) == "instagram"
+    assert detect_platform("https://notinstagram.com/reel/x") is None
+    assert normalize("https://www.instagram.com/reel/C1a2B3c4D5e/?igsh=zz") == "https://instagram.com/reel/C1a2B3c4D5e"
+    assert media_key_from_url("https://www.instagram.com/reels/C1a2B3c4D5e/") == "C1a2B3c4D5e"
+    assert media_key_from_url("https://www.instagram.com/p/C1a2B3c4D5e/") == "C1a2B3c4D5e"
+    assert DEFAULTS["instagram"].use_proxy
+    blocked = ApiError("platform_down", "[Instagram] C1: Requested content is not available, rate-limit reached or login required")
+    assert is_bot_block(blocked)
 
 
 def test_filenames():

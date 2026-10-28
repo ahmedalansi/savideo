@@ -5,7 +5,10 @@ without the network. The public half goes to the browser; the private half
 (stream URLs, headers) stays in Redis and is used only to stream the file.
 """
 
+import os
 import re
+import shutil
+import tempfile
 from typing import Any, Protocol
 
 import anyio
@@ -24,6 +27,10 @@ class Extractor(Protocol):
 
 
 class YtDlpExtractor:
+    def __init__(self, cookies_file: str | None = None):
+        # Netscape cookies.txt of a throwaway account; Instagram often wants a login.
+        self.cookies_file = cookies_file or None
+
     def _opts(self, proxy: str | None) -> dict[str, Any]:
         opts: dict[str, Any] = {
             "quiet": True,
@@ -43,6 +50,14 @@ class YtDlpExtractor:
     def _run(self, url: str, opts: dict[str, Any]) -> dict[str, Any]:
         import yt_dlp
 
+        jar = None
+        if self.cookies_file:
+            # yt-dlp writes the jar back on close; give each call its own copy so
+            # parallel workers never clash and the original can stay read-only.
+            fd, jar = tempfile.mkstemp(suffix=".txt")
+            os.close(fd)
+            shutil.copyfile(self.cookies_file, jar)
+            opts = opts | {"cookiefile": jar}
         try:
             with yt_dlp.YoutubeDL(opts) as ydl:
                 info = ydl.extract_info(url, download=False)
@@ -53,6 +68,9 @@ class YtDlpExtractor:
             raise ApiError("unsupported_site", str(e)) from e
         except yt_dlp.utils.DownloadError as e:
             raise ApiError(classify_error(str(e)), str(e)[:300]) from e
+        finally:
+            if jar:
+                os.unlink(jar)
 
     async def extract(self, url: str, proxy: str | None) -> dict[str, Any]:
         return await anyio.to_thread.run_sync(self._run, url, self._opts(proxy))
@@ -83,7 +101,7 @@ def classify_error(message: str) -> str:
 
 
 def is_bot_block(err: ApiError) -> bool:
-    return err.code == "platform_down" and bool(re.search(r"bot|429|too many|403", err.message.lower()))
+    return err.code == "platform_down" and bool(re.search(r"bot|429|too many|403|rate.?limit|login required", err.message.lower()))
 
 
 # ---- info dict -> MediaInfo -------------------------------------------------
