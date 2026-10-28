@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Naqi: save videos from links",
+    "title": "savideo: save videos from links",
     "description": "Paste a public video link, pick a quality, trim if you like, and save it. No sign-up."
   },
   "nav": {
@@ -9,7 +9,7 @@
     "apps": "Apps",
     "settings": "Settings",
     "main": "Main",
-    "home": "Naqi home"
+    "home": "savideo home"
   },
   "hero": {
     "title": "Paste a link. Get the file. That's it.",
@@ -168,7 +168,7 @@
     "about": "About",
     "contactUs": "Contact us",
     "noStore": "We don't store the files you download.",
-    "rights": "Naqi: one link, one file, no ads."
+    "rights": "savideo: one link, one file, no ads."
   },
   "toast": {
     "dismiss": "Dismiss"
@@ -182,12 +182,12 @@
     "p1b": "You press Download and get a new tab, a pop-up or an ad instead of your file. Go back, try again, repeat.",
     "p2t": "Install this first",
     "p2b": "Then comes the extension you must add, or the fake virus warning, before you're allowed HD.",
-    "close": "Naqi does one thing: you paste a link, you get the file."
+    "close": "savideo does one thing: you paste a link, you get the file."
   },
   "features": {
     "title": "What we promise",
     "f1t": "No ads, no pop-ups, no new tabs",
-    "f1b": "There are no ad networks on Naqi. One click gives you one file.",
+    "f1b": "There are no ad networks on savideo. One click gives you one file.",
     "f2t": "Full quality, nothing to install",
     "f2b": "1080p and 4K, when the video has them, right on this page. No quality needs an extension or app.",
     "f3t": "Errors that tell you why",

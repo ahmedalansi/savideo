@@ -1,6 +1,6 @@
 import { DraftNote, PageShell } from "@/components/PageShell";
 
-export const metadata = { title: "Privacy | Naqi" };
+export const metadata = { title: "Privacy | savideo" };
 
 export default function PrivacyPage() {
   return (

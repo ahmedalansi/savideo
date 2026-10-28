@@ -1,4 +1,4 @@
-# Naqi browser tests
+# savideo browser tests
 
 Playwright end-to-end tests for the web app on the real API, from `/replica-test`. Test plan and results: `replica/test-plan.md`; bugs: `replica/bugs.md`.
 

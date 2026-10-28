@@ -1,5 +1,7 @@
 # Brand: Naqi (نقي)
 
+> **2026-10-28 update:** the owner renamed the site from Naqi to **savideo**. The site, page titles, wordmark and docs now say savideo; the teal palette and drop mark stay. Internal identifiers (Docker images, Postgres database and user, logger, `/opt/naqi` paths) still use `naqi` so the running server keeps working. Note that "savideo" is very close to the original site's name (savevideo.net), which works against the clean-room, own-brand goal below; a trademark and confusing-similarity check is advised before launch. The rest of this file is the original Naqi brand study.
+
 Written 2026-10-26 by /replica-brand (followed `tools/replica-skill/replica-brand/SKILL.md`; it is not installed as a slash command).
 Angle from `replica/fixes.md`: **A. Clean**, one click, one file, no ads, nothing to install.
 

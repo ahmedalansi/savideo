@@ -1,4 +1,4 @@
-"""Naqi API: the routes from architecture.md, under /v1."""
+"""savideo API: the routes from architecture.md, under /v1."""
 
 import contextlib
 import hashlib
@@ -622,7 +622,7 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
             await db.close()
             await redis.aclose()
 
-    app = FastAPI(title="Naqi API", version="0.1.0", lifespan=lifespan, docs_url="/v1/docs", openapi_url="/v1/openapi.json")
+    app = FastAPI(title="savideo API", version="0.1.0", lifespan=lifespan, docs_url="/v1/docs", openapi_url="/v1/openapi.json")
     app.add_exception_handler(ApiError, api_error_handler)
     app.add_exception_handler(RequestValidationError, validation_handler)
     app.include_router(v1)

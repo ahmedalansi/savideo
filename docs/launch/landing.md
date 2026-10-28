@@ -1,4 +1,4 @@
-# Landing page: Naqi
+# Landing page: savideo
 
 Written 2026-10-26 by /replica-launch (followed `tools/replica-skill/replica-launch/SKILL.md`; it is not installed as a slash command).
 Angle: **A. Clean** (`replica/fixes.md`). Voice: plain, calm, honest (`replica/brand.md`).
@@ -16,7 +16,7 @@ No testimonials, no user counts, no star ratings, no press logos, no "trusted by
 | --- | --- | --- | --- |
 | 1 | **Hero** | "Paste a link. Get the file. That's it." / "No ads, no pop-ups, nothing to install. Pick a quality up to 4K and cut out just the part you need." The button is the product itself (Get video), not a screenshot of it. | angle A |
 | 2 | Works with | the 7 platforms, generic icons (not their logos) | parity |
-| 3 | **The problem** | "Most downloader sites fight you." Card 1 "The button is a trap": you press Download and get a new tab, a pop-up or an ad. Card 2 "Install this first": the extension you must add, or the fake virus warning, before HD. Close: "Naqi does one thing: you paste a link, you get the file." | hate themes 1 (ads, 40 reviews) and 2 (installs/malware, 28), paraphrased |
+| 3 | **The problem** | "Most downloader sites fight you." Card 1 "The button is a trap": you press Download and get a new tab, a pop-up or an ad. Card 2 "Install this first": the extension you must add, or the fake virus warning, before HD. Close: "savideo does one thing: you paste a link, you get the file." | hate themes 1 (ads, 40 reviews) and 2 (installs/malware, 28), paraphrased |
 | 4 | How it works | "Three steps, no account": copy the link, paste it here, pick and save. | core flow F01 |
 | 5 | **What we promise** | 1 No ads, no pop-ups, no new tabs. 2 Full quality, nothing to install. 3 Errors that tell you why. 4 No scare tactics, ever. 5 No account, nothing kept. 6 Trim before you save. | fixes 1, 2, 3, 4; then privacy and trim |
 | 6 | Pricing | Free (available now) and Plus (planned, $3/month or $30/year, "not on sale yet"). See `pricing.md`. | billing theme 4 |

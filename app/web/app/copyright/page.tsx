@@ -1,7 +1,7 @@
 import { DraftNote, PageShell } from "@/components/PageShell";
 import { TakedownForm } from "./TakedownForm";
 
-export const metadata = { title: "Copyright and takedowns | Naqi" };
+export const metadata = { title: "Copyright and takedowns | savideo" };
 
 export default function CopyrightPage() {
   return (

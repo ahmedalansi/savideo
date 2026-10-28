@@ -1,15 +1,15 @@
 import { DraftNote, PageShell } from "@/components/PageShell";
 
-export const metadata = { title: "Terms | Naqi" };
+export const metadata = { title: "Terms | savideo" };
 
 export default function TermsPage() {
   return (
     <PageShell title="Terms of use">
       <DraftNote />
       <h2>What the service does</h2>
-      <p>Naqi reads a public video link you give it and sends the file to your device. We don&apos;t host, store or index any videos.</p>
+      <p>savideo reads a public video link you give it and sends the file to your device. We don&apos;t host, store or index any videos.</p>
       <h2>Your responsibility</h2>
-      <p>Only use Naqi for videos you own, videos whose owner has given you permission, or content whose licence allows saving it. You are responsible for respecting copyright and the rules of the site the video comes from.</p>
+      <p>Only use savideo for videos you own, videos whose owner has given you permission, or content whose licence allows saving it. You are responsible for respecting copyright and the rules of the site the video comes from.</p>
       <h2>What you may not do</h2>
       <ul>
         <li>Download content to redistribute it without the rights holder&apos;s permission.</li>

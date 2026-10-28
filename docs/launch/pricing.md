@@ -1,4 +1,4 @@
-# Pricing: Naqi
+# Pricing: savideo
 
 Written 2026-10-26 by /replica-launch.
 
@@ -64,7 +64,7 @@ No free trial: the free plan is the trial.
 
 | object | value |
 | --- | --- |
-| Product | `Naqi Plus`, description "No hourly limit, playlists, longer videos. No ads." |
+| Product | `savideo Plus`, description "No hourly limit, playlists, longer videos. No ads." |
 | Price 1 | `plus_monthly`: 3.00 USD, recurring, monthly |
 | Price 2 | `plus_yearly`: 30.00 USD, recurring, yearly |
 | Customer portal | on; cancel allowed, "at end of billing period"; plan switching monthly to yearly allowed |
