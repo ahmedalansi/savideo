@@ -1,0 +1,18 @@
+{
+  "_about": "Themes for online video downloader sites, used with tools/replica-skill/replica-entrepreneur/reviews.py. Praise like 'no ads' also matches the ads theme; read 5-star matches as praise.",
+  "request_patterns": ["\\bi wish\\b", "\\bplease add\\b", "\\bsuggestion\\b", "\\badd a feature\\b", "\\bcan we\\b", "\\bplz\\b", "\\bwould be (nice|great|good)\\b", "\\bwhy did\\b"],
+  "themes": [
+    {"id":"ads","label":"Pop-ups, redirects and shady ads","kind":"complaint","patterns":["\\bads?\\b","\\badds\\b","\\badvert","\\bpop.?ups?\\b","\\bredirect","\\bnew tab\\b","\\bcasino\\b","\\bgambling\\b","18\\+","\\bnsfw\\b","\\bspammy\\b","\\bdodgy\\b","\\bshady\\b","YOU WON"]},
+    {"id":"malware","label":"Malware, forced installs and extensions","kind":"complaint","patterns":["\\bvirus","\\bviren\\b","\\bmalware\\b","\\bransomware\\b","\\bhacked\\b","\\bbundleware\\b","\\bspyware","\\bhijack","\\bextension\\b","\\bsoftware\\b","\\bprograms?\\b","\\bhelper anwendung\\b","\\bauto download\\b","\\braids your computer\\b","\\bvidcombo\\b","\\binfected\\b"]},
+    {"id":"fails","label":"Downloads fail or errors","kind":"complaint","patterns":["\\berrors?\\b","\\bfail","\\bdoesn'?t work\\b","\\bnot work","\\bisn'?t working\\b","\\bstopped working\\b","\\bnot opening\\b","\\binvalid\\b","\\bcould not download\\b","\\bcannot be played\\b","\\bmuted\\b","\\bnicht\\b","\\bnon funziona\\b","\\bnothing happens\\b","\\bdoes not download\\b","\\bnot even allow\\b","\\bbarely even works\\b","\\bno perfect working\\b","\\bnever starts\\b","\\bnone? (?:downloads)?\\b"]},
+    {"id":"quality","label":"Quality capped unless you install or watch an ad","kind":"complaint","patterns":["\\b360p\\b","\\b720p\\b","\\b1080p\\b","\\bhigh definition\\b","\\bbest quality\\b","\\bhd\\b","\\b4 ?k\\b","\\bfull-hd\\b"]},
+    {"id":"limits","label":"Waits, limits and long videos","kind":"complaint","patterns":["\\bwaiting\\b","\\b3 videos\\b","\\bwithout any limit\\b","\\bwithput any limit\\b","\\b2hrs\\b","\\bone hour\\b","\\b28 min\\b","\\b800\\+ mb\\b"]},
+    {"id":"slow","label":"Slow site or downloads","kind":"complaint","patterns":["\\bslow","\\bloading\\b","\\bwaste of time\\b","\\bbufering\\b"]},
+    {"id":"ux","label":"Confusing results","kind":"complaint","patterns":["\\bconfusing\\b","\\bhard to use\\b","\\bwhat download is what\\b","\\bwithout a title\\b","\\bnavigate\\b"]},
+    {"id":"billing","label":"Paid plans and billing","kind":"complaint","patterns":["\\babo\\b","\\bmonatsabo\\b","\\bprobeabo\\b","\\bcobros\\b","\\btarjeta\\b","\\bmoney\\b","\\bdon'?t pay\\b","\\bscam","\\bcomprar\\b"]},
+    {"id":"trust","label":"Trust, privacy and service shutdowns","kind":"complaint","patterns":["\\bprivacy\\b","\\bsold my data\\b","\\bdiscontinu","\\bsecurity\\b","\\bfake\\b","\\blegit\\b","\\bgo out of business\\b","\\bwent down\\b","\\bstopped working\\b"]},
+    {"id":"audio","label":"Audio and MP3 extras","kind":"request","patterns":["\\bmp3\\b","\\bspotify\\b","\\bvocals?\\b","\\bringtone\\b","\\bsongs?\\b","\\bmusic\\b"]},
+    {"id":"trim","label":"Cut or trim before saving","kind":"request","patterns":["\\bcut video\\b","\\btrim\\b","\\bclip"]},
+    {"id":"platforms","label":"Platforms and sites supported","kind":"request","patterns":["\\bnpostart\\b","\\bspotify\\b","\\bfacebook\\b","\\binstagram\\b","\\bsupports a lot of websites\\b","\\bage.?restricted\\b","\\bage\\b"]}
+  ]
+}

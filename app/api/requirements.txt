@@ -1,0 +1,10 @@
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+httpx==0.28.1
+redis==8.1.0
+asyncpg==0.32.0
+pydantic==2.14.1
+pydantic-settings==2.16.1
+email-validator==2.3.0
+# yt-dlp needs a JavaScript runtime for YouTube; the deno extra installs one from PyPI.
+yt-dlp[default,deno,curl-cffi]==2026.10.21

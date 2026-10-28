@@ -1,0 +1,33 @@
+{$API_DOMAIN} {
+	# Only the public API. /internal/* (FFmpeg's relay) is never routed from outside.
+	@public path /v1/* /health /health/canary
+	handle @public {
+		reverse_proxy api:8000 {
+			# Send video bytes as they come, no buffering.
+			flush_interval -1
+			transport http {
+				read_timeout 4h
+			}
+		}
+	}
+	handle {
+		respond 404
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+}
+
+{$WEB_DOMAIN}, www.{$WEB_DOMAIN} {
+	@www host www.{$WEB_DOMAIN}
+	redir @www https://{$WEB_DOMAIN}{uri} permanent
+	encode zstd gzip
+	reverse_proxy web:3000
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+}

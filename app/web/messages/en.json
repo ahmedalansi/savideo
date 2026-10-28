@@ -1,0 +1,235 @@
+{
+  "meta": {
+    "title": "Naqi: save videos from links",
+    "description": "Paste a public video link, pick a quality, trim if you like, and save it. No sign-up."
+  },
+  "nav": {
+    "skip": "Skip to main content",
+    "faq": "FAQ",
+    "apps": "Apps",
+    "settings": "Settings",
+    "main": "Main",
+    "home": "Naqi home"
+  },
+  "hero": {
+    "title": "Paste a link. Get the file. That's it.",
+    "lead": "No ads, no pop-ups, nothing to install. Pick a quality up to 4K and cut out just the part you need.",
+    "label": "Video link",
+    "placeholder": "Paste a video link",
+    "paste": "Paste",
+    "pasted": "Pasted",
+    "clear": "Clear the link",
+    "submit": "Get video",
+    "pasteDenied": "Your browser blocked the clipboard. Press Ctrl+V (or Cmd+V) in the field instead.",
+    "demo": "No link handy? Try a demo video"
+  },
+  "quota": {
+    "left": "{left} of {limit} free downloads left this hour",
+    "gateTitle": "That's this hour's 3 free downloads",
+    "gateBody": "They come back at the top of the hour. Leave this tab open and the counter below will tell you when. You don't need to install anything.",
+    "next": "Next free download in",
+    "cta": "Optional: the browser extension (coming soon)",
+    "back": "You're good to go. Your free downloads are back."
+  },
+  "disclaimer": {
+    "text": "Only download videos you own or have permission to save. You're responsible for how you use them.",
+    "terms": "Terms",
+    "copyright": "Copyright"
+  },
+  "loading": {
+    "label": "Loading video details",
+    "status": "Reading the link…"
+  },
+  "result": {
+    "video": "Video",
+    "audio": "Audio",
+    "audioOff": "This site doesn't offer audio-only files",
+    "duration": "Duration",
+    "noThumb": "No preview",
+    "formats": "Available qualities",
+    "about": "about {size}",
+    "unknownSize": "size unknown",
+    "download": "Download",
+    "downloadAria": "Download {label}, {size}",
+    "preparing": "Preparing",
+    "started": "Downloading",
+    "saved": "Saved",
+    "again": "Download again",
+    "best": "Best",
+    "merged": "Merged",
+    "tooLarge": "Too large",
+    "startedToast": "Your download has started. The file is in your browser's downloads.",
+    "failedToast": "The download didn't start. That's on us, not you. Please try again.",
+    "newLink": "Paste another link",
+    "listStatus": "{label}: {state}"
+  },
+  "trim": {
+    "toggle": "Trim",
+    "start": "Start",
+    "end": "End",
+    "reset": "Full video",
+    "clip": "Clip: {length}",
+    "hint": "Use m:ss or h:mm:ss. Arrow keys nudge by 1 second, Shift+arrow by 10.",
+    "keyframe": "Cuts snap to the nearest keyframe, so the clip may start a second or two early.",
+    "errFormat": "Write the time as m:ss or h:mm:ss.",
+    "errOrder": "The end has to come after the start.",
+    "errBeyond": "The end is past the end of the video ({duration}).",
+    "errShort": "The clip must be at least 1 second long."
+  },
+  "playlist": {
+    "title": "Playlist: {title}",
+    "count": "Showing the first {count} videos",
+    "choose": "Choose",
+    "chooseAria": "Choose {title}"
+  },
+  "errors": {
+    "invalid_url": "That doesn't look like a link. Check it and try again.",
+    "unsupported_site": "We don't support this site yet. Supported: {list}.",
+    "private_video": "This video is private, so we can't read it.",
+    "removed_video": "This video was removed or the link is broken.",
+    "age_restricted": "This video is age-restricted and can't be downloaded here.",
+    "live_stream": "Live streams can't be downloaded. Try again after the stream ends.",
+    "geo_blocked": "This video isn't available in our server's region.",
+    "too_long": "This video is longer than we can handle (3 hours for video, 4 for audio).",
+    "too_large": "This file would be over our 4 GB limit. Try a lower quality or trim it.",
+    "busy": "We're busy right now. Retrying in {seconds} s…",
+    "platform_down": "Downloads from this site are paused while we fix something. Please try later.",
+    "network": "We couldn't reach the server. Check your connection and try again.",
+    "quota_exceeded": "You've used this hour's free downloads.",
+    "blocked": "This video isn't available here after a copyright request.",
+    "link_expired": "This link has expired. Paste the video link again.",
+    "rate_limited": "That's a lot of requests in a short time. Wait a minute and try again.",
+    "invalid_request": "Something in that request wasn't right. Reload the page and try again.",
+    "retry": "Try again",
+    "seeSites": "See supported sites"
+  },
+  "platforms": {
+    "title": "Works with",
+    "comingSoon": "coming soon"
+  },
+  "howto": {
+    "title": "Three steps, no account",
+    "s1t": "Copy the link",
+    "s1b": "Use the share button on the video and copy its address.",
+    "s2t": "Paste it here",
+    "s2b": "Drop it in the field above and press Get video.",
+    "s3t": "Pick and save",
+    "s3b": "Choose a quality or MP3, trim if you want, and the file saves to your device."
+  },
+  "faq": {
+    "title": "Questions people ask",
+    "more": "All questions",
+    "q1": "Is it free?",
+    "a1": "Yes. You get 3 free downloads every hour. The counter resets at the top of the hour.",
+    "q2": "Do you keep the videos?",
+    "a2": "No. The file streams from the source to your device as it's made. Nothing is saved on our servers.",
+    "q3": "Why is 4K not offered for some videos?",
+    "a3": "We only list qualities the source actually has. If it was uploaded in 1080p, that's the top option.",
+    "q4": "Why does my trimmed clip start a little early?",
+    "a4": "To keep it fast we cut on keyframes instead of re-encoding, so a clip can start up to about 2 seconds before the time you set.",
+    "q5": "Where does the file go on iPhone?",
+    "a5": "Safari saves it to the Files app, in Downloads. From there you can share it to Photos.",
+    "q6": "Can I download anything?",
+    "a6": "Only videos you own or have permission to save. Respect the creator's rights and each site's rules.",
+    "q7": "How do you make money without ads?",
+    "a7": "Today we don't. The free plan stays free, and a paid Plus plan for heavy users is planned. We will not add ad networks or pop-ups.",
+    "q8": "Do I have to install the extension or app?",
+    "a8": "No. Everything works on this page, at every quality. The extension and app are optional extras that come later."
+  },
+  "settings": {
+    "title": "Settings",
+    "close": "Close settings",
+    "theme": "Theme",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark",
+    "quality": "Default quality",
+    "qBest": "Best",
+    "q1080": "1080p",
+    "q720": "720p",
+    "qMp3": "MP3",
+    "language": "Language",
+    "history": "Keep recent downloads on this device",
+    "clear": "Clear history",
+    "recent": "Recent downloads",
+    "recentEmpty": "Nothing here yet. Your recent downloads show up here, and only on this device.",
+    "open": "Open link"
+  },
+  "footer": {
+    "product": "Product",
+    "legal": "Legal",
+    "contact": "Contact",
+    "home": "Downloader",
+    "apps": "Extension and app",
+    "faq": "FAQ",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "copyright": "Copyright and takedowns",
+    "about": "About",
+    "contactUs": "Contact us",
+    "noStore": "We don't store the files you download.",
+    "rights": "Naqi: one link, one file, no ads."
+  },
+  "toast": {
+    "dismiss": "Dismiss"
+  },
+  "fake": {
+    "banner": "Demo mode: sample data, no real downloads yet."
+  },
+  "problem": {
+    "title": "Most downloader sites fight you",
+    "p1t": "The button is a trap",
+    "p1b": "You press Download and get a new tab, a pop-up or an ad instead of your file. Go back, try again, repeat.",
+    "p2t": "Install this first",
+    "p2b": "Then comes the extension you must add, or the fake virus warning, before you're allowed HD.",
+    "close": "Naqi does one thing: you paste a link, you get the file."
+  },
+  "features": {
+    "title": "What we promise",
+    "f1t": "No ads, no pop-ups, no new tabs",
+    "f1b": "There are no ad networks on Naqi. One click gives you one file.",
+    "f2t": "Full quality, nothing to install",
+    "f2b": "1080p and 4K, when the video has them, right on this page. No quality needs an extension or app.",
+    "f3t": "Errors that tell you why",
+    "f3b": "Private, removed, too long or not available in our region: you see the real reason and what to do next.",
+    "f4t": "No scare tactics, ever",
+    "f4b": "No fake virus alerts, no countdowns to rush you, no prizes you've won.",
+    "f5t": "No account, nothing kept",
+    "f5b": "We don't ask who you are. The file streams to your device and isn't stored on our servers.",
+    "f6t": "Trim before you save",
+    "f6b": "Set a start and an end and download just that part, or save the sound as MP3."
+  },
+  "pricing": {
+    "title": "Pricing",
+    "lead": "Free covers most people. A paid plan for heavy use comes later.",
+    "free": {
+      "name": "Free",
+      "badge": "Available now",
+      "for": "For everyday saving",
+      "price": "$0",
+      "period": "No account, no card",
+      "b1": "3 downloads every hour",
+      "b2": "Every quality the video has, up to 4K",
+      "b3": "Trim and MP3",
+      "b4": "No ads, ever",
+      "note": "The hourly count resets at the top of each hour."
+    },
+    "plus": {
+      "name": "Plus",
+      "badge": "Planned",
+      "for": "For people who save a lot",
+      "price": "$3 a month",
+      "period": "or $30 a year, two months free",
+      "b1": "No hourly limit (fair use)",
+      "b2": "Whole playlists in one go",
+      "b3": "Longer videos",
+      "b4": "A reminder before every renewal, cancel in one click",
+      "note": "Not on sale yet, and we don't take payments today. You'll see the full price before you pay."
+    }
+  },
+  "cta": {
+    "title": "Got a link? Try it now.",
+    "lead": "No sign-up and nothing to install. Your first file is a paste away.",
+    "button": "Paste a link"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "avoid": [
+    "SaveVideo",
+    "SaveVideo4K",
+    "savideo",
+    "savevideo.net",
+    "YouTube"
+  ],
+  "app_store": {
+    "name": "Naqi: Clean Video Saver",
+    "subtitle": "One link, one file, no ads",
+    "promotional_text": "Paste a link to your own video and keep a copy on your phone. No ads, no pop-ups, no account. Trim before you save.",
+    "description": "Naqi saves a copy of a video from its link. Nothing else gets in the way.\n\nNo ads. No pop-ups. No account. No fake virus warnings.\n\nHow it works:\n1. Copy the link to a video you own or have permission to save.\n2. Paste it into Naqi.\n3. Pick a quality, trim if you like, and save it to Files or Photos.\n\nWhat you get:\n- Every quality the source has, up to 4K\n- Trim: save just the part you need\n- Sound only, as an audio file\n- Clear errors that say why a link didn't work and what to do next\n- Recent saves kept only on this device\n\nWe don't store your files on our servers and we don't sell data.\n\nOnly save videos you own or have the right to save. Respect each creator's rights and each site's rules.",
+    "keywords": "downloader,clip,trim,mp4,mp3,offline,cutter,4k,converter,gallery,keep,copy,media,share",
+    "whats_new": "First release."
+  },
+  "google_play": {
+    "title": "Naqi: Clean Video Saver",
+    "short_description": "Paste a link, get the file. No ads, no pop-ups, no account needed.",
+    "full_description": "Naqi saves a copy of a video from its link. Nothing else gets in the way.\n\nNo ads. No pop-ups. No account. No fake virus warnings.\n\nHow it works:\n1. Copy the link to a video you own or have permission to save.\n2. Share it to Naqi, or paste it in.\n3. Pick a quality, trim if you like, and it saves to your gallery.\n\nWhat you get:\n- Every quality the source has, up to 4K\n- Trim: save just the part you need\n- Sound only, as an audio file\n- Clear errors that say why a link didn't work\n\nWe don't store your files on our servers and we don't sell data.\n\nOnly save videos you own or have the right to save."
+  }
+}

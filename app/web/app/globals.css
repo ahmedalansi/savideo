@@ -1,0 +1,108 @@
+@import "tailwindcss";
+@import "../design/tokens.css";
+@import "../design/tailwind.theme.css";
+
+@layer base {
+  html {
+    background: var(--sv-color-bg);
+    color: var(--sv-color-text);
+    font-family: var(--sv-font-sans);
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    min-height: 100dvh;
+    background: var(--sv-color-bg);
+  }
+  ::selection {
+    background: var(--sv-color-accent-subtle);
+  }
+}
+
+/* Focus ring from the design system: 2px bg gap + 2px focus colour. */
+@utility sv-focus {
+  outline: none;
+  &:focus-visible {
+    box-shadow: var(--sv-shadow-focus);
+  }
+}
+@utility sv-focus-field {
+  outline: none;
+  &:focus,
+  &:focus-visible {
+    border-color: var(--sv-color-accent);
+    box-shadow: var(--sv-shadow-focus);
+  }
+}
+
+/* Times, sizes and URLs stay left-to-right inside Arabic text. */
+@utility sv-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+@utility sv-shimmer {
+  background-image: linear-gradient(90deg, transparent, color-mix(in oklab, var(--sv-color-surface-raised) 60%, transparent), transparent);
+  background-size: 200% 100%;
+  animation: sv-shimmer 1.4s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@utility sv-indeterminate {
+  animation: sv-indeterminate 1.2s var(--sv-motion-ease) infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    width: 100%;
+    opacity: 0.5;
+  }
+}
+
+@utility sv-toast-in {
+  animation: sv-rise var(--sv-motion-base) var(--sv-motion-ease);
+}
+
+@utility sv-section {
+  padding-block: 4rem;
+  @media (width >= 48rem) {
+    padding-block: 6rem;
+  }
+}
+
+@utility sv-gutter {
+  padding-inline: var(--sv-layout-gutter-mobile);
+  @media (width >= 48rem) {
+    padding-inline: var(--sv-layout-gutter-desktop);
+  }
+}
+
+@keyframes sv-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@keyframes sv-indeterminate {
+  from { inset-inline-start: -33%; }
+  to { inset-inline-start: 100%; }
+}
+@keyframes sv-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+
+.sv-prose h2 { font-size: var(--sv-text-lg); line-height: var(--sv-text-lg-line); font-weight: 600; margin-top: 2rem; margin-bottom: 0.5rem; }
+.sv-prose p, .sv-prose li { font-size: var(--sv-text-base); line-height: var(--sv-text-base-line); color: var(--sv-color-text-muted); }
+.sv-prose p + p { margin-top: 0.75rem; }
+.sv-prose ul { list-style: disc; padding-inline-start: 1.25rem; display: grid; gap: 0.375rem; }
+.sv-prose a { color: var(--sv-color-accent); text-decoration: underline; text-underline-offset: 2px; }
+
+/* next/font gives the families hashed names; point the token stacks at them. */
+:root {
+  --sv-font-sans: var(--font-inter), var(--font-plex-arabic), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sv-font-arabic: var(--font-plex-arabic), var(--font-inter), system-ui, sans-serif;
+  --sv-font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+:root[lang="ar"] { --sv-font-sans: var(--sv-font-arabic); }

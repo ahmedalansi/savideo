@@ -1,0 +1,65 @@
+# One VPS: site + api + redis + postgres behind Caddy (automatic TLS).
+# Only Caddy publishes ports. Start with: docker compose up -d --build
+services:
+  api:
+    build: .
+    image: naqi-api:current
+    env_file: .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://naqi:${POSTGRES_PASSWORD}@postgres:5432/naqi
+    depends_on:
+      redis: { condition: service_healthy }
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "256mb", "--maxmemory-policy", "volatile-lru"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: naqi
+      POSTGRES_USER: naqi
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "naqi"]
+      interval: 10s
+
+  web:
+    build:
+      context: ../web
+      args:
+        NEXT_PUBLIC_API_BASE: ${PUBLIC_API_BASE}
+        NEXT_PUBLIC_DEMO_URL: ${DEMO_URL:-}
+    image: naqi-web:current
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.10-alpine
+    environment:
+      API_DOMAIN: ${API_DOMAIN}
+      WEB_DOMAIN: ${WEB_DOMAIN}
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [api, web]
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  caddy_data:

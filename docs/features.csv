@@ -1,0 +1,40 @@
+feature,area,priority,original,clone,notes
+Paste a video URL with paste button,input,must,yes,yes,clone: Clipboard API with Ctrl/Cmd+V hint when blocked
+Validate URL and detect platform,input,must,yes,yes,clone: instant browser check; API repeats it
+Fetch title thumbnail and duration,result,must,yes,yes,"backend: POST /v1/media/resolve via yt-dlp, 10-min cache, thumbnails proxied; tested with fixtures, live platforms not yet (sandbox has no access)"
+List video qualities with file sizes,result,must,yes,yes,"up to 1080p for YouTube on original site; backend: per-height best format, sizes from filesize/tbr, cap from platforms.max_height (4K default)"
+Download MP4 in chosen quality,download,must,yes,yes,"backend: direct pass-through with Range/Content-Length, chunked fetch for throttled sources; e2e in Chromium"
+Merge separate video and audio streams,download,must,yes,yes,needed above 720p on YouTube; backend: FFmpeg -c copy to fragmented MP4 on a pipe; nothing stored
+Audio-only MP3,download,must,yes,yes,not for X or TikTok; backend: FFmpeg libmp3lame 192/128 kbps; off for X
+Trim with start and end time,trim,must,yes,yes,sizes update to clip length; backend: FFmpeg -ss/-t stream copy (keyframe cuts); server validates times
+Free YouTube limit with reset countdown,quota,must,yes,yes,"original is 3 per hour YouTube only; brief says 3 total - to confirm; backend: Redis per-browser cookie 3/UTC hour + per-IP ceiling 15, GET /v1/quota, 429 with resets_at"
+Clear error states (invalid private removed),errors,must,yes,yes,"backend maps yt-dlp errors to the codes; added blocked, link_expired, rate_limited, invalid_request"
+Copyright disclaimer and takedown page,legal,must,yes,partial,"form posts to POST /v1/takedowns (Postgres, email via Resend); accept blocks the videos; legal text still needs lawyer review"
+Support YouTube Facebook X Reddit Dailymotion Bilibili Twitch,platforms,should,yes,partial,"Twitch only mentioned on original; backend: yt-dlp for all seven, generic extractor off, kill switch + canary; needs a live check from the VPS"
+YouTube Shorts links,platforms,should,yes,yes,shorts ids parsed; portrait labelled by short side (1080x1920 = 1080p)
+Promote extension and app at the limit gate,quota,should,yes,yes,our own CTA; extension and app come later; clone: gate CTA to /apps coming-soon page
+Default quality preference,settings,should,yes,yes,clone: Best/1080p/720p/MP3 marks the recommended row
+Light and dark theme,settings,should,yes,yes,"clone: System/Light/Dark, no flash on load"
+Mobile friendly incl. iOS Safari,platform,should,yes,partial,clone: checked at 390px; real iPhone test pending
+4K where the source offers it,download,should,yes,yes,"original caps YouTube at 1080p on web; backend: up to 2160p, merged by FFmpeg; watch proxy GB cost"
+Long-video quality cap,quota,should,yes,skip,"original: 10 min or longer limited to 360p - to confirm; clone: architecture chose no cap, only 3 h / 4 GB hard limits (too_long, too_large shown)"
+How-to and FAQ sections,content,should,yes,yes,"our own text; clone: own copy, EN + AR"
+Demo video button,input,could,yes,yes,real mode: shown only when NEXT_PUBLIC_DEMO_URL is set
+Playlist listing (first 20),platforms,could,yes,yes,"backend: POST /v1/playlists/resolve, flat extraction, 20 items"
+Recent downloads stored on device,settings,could,yes,yes,"clone: in Settings, toggle + clear"
+Clean UI toggle,settings,could,yes,no,
+TikTok Instagram Pinterest support,platforms,could,yes,no,not in brief
+Per-platform landing pages,content,could,yes,no,SEO
+Multi-language UI,settings,could,yes,partial,original has 24; clone: EN + AR with RTL for the tool; legal pages English only
+Browser extension,products,skip,yes,skip,later phase per brief
+Android app,products,skip,yes,skip,later phase per brief
+Paid desktop app extras,products,skip,yes,skip,separate product
+Address-bar domain shortcut,input,skip,yes,skip,depends on their domain; could do our own later
+Sister audio site for SoundCloud,platforms,skip,yes,skip,separate product
+"Clean-download promise: no ads, pop-unders or new tabs",trust,must,no,no,"from /replica-entrepreneur fix 1 (ads, 40 reviews/7 sources); CSP + e2e test that a download click opens nothing"
+No install needed for any quality; limit gate offers wait first,quota,must,no,partial,"fix 2 (forced installs 28/6, quality cap 7/5); 4K already on web; gate CTA still points to /apps"
+"Errors say why and offer Retry, plus public platform status",errors,should,no,partial,"fix 3 (fails 23/5); error codes exist, status line from canary not built"
+No fear tactics and a plain privacy page,trust,should,no,partial,"fix 4 (trust 11/5); privacy page exists, needs the no-account/no-selling wording"
+Long-video reliability with progress for big files,download,should,no,partial,"fix 5 (thin, 5 reviews); test a 2 h video on the VPS"
+Speed budget for page and resolve,performance,should,no,no,fix 6 (slow 6/4); measure at deploy
+Filename from video title and clear result rows,result,could,no,partial,"fix 7 (thin, 3 reviews)"

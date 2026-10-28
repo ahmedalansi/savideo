@@ -1,0 +1,8 @@
+{
+  "name": "Naqi",
+  "name_ar": "نقي",
+  "avoid": ["SaveVideo", "SaveVideo4K", "savideo"],
+  "domains": ["savevideo.net"],
+  "colors": ["#0a0714"],
+  "palette": {"accent_light": "#0e7481", "accent_dark": "#4cc9d3"}
+}

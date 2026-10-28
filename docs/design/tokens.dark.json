@@ -1,0 +1,118 @@
+{
+  "_about": "Naqi dark theme. Same role names as tokens.json, only colour values differ. Everything else (type, space, radius) comes from tokens.json.",
+  "color": {
+    "bg": "#0c1315",
+    "surface": "#131c1f",
+    "surface-raised": "#1a2528",
+    "border": "#26343a",
+    "border-input": "#6f7988",
+    "text": "#eef1f5",
+    "text-muted": "#9ba5b3",
+    "accent": "#4cc9d3",
+    "accent-hover": "#7ad9e0",
+    "accent-subtle": "#10303a",
+    "on-accent": "#04181b",
+    "focus": "#4cc9d3",
+    "danger": "#ff8080",
+    "danger-subtle": "#3a1a1c",
+    "success": "#4cc58a",
+    "success-subtle": "#13301f",
+    "warning": "#f0b54a",
+    "warning-subtle": "#33260f",
+    "skeleton": "#1f2b2f"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "surface-raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "surface-raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "on-accent",
+      "accent-hover"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "accent",
+      "accent-subtle"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "danger",
+      "danger-subtle"
+    ],
+    [
+      "success",
+      "bg"
+    ],
+    [
+      "success",
+      "success-subtle"
+    ],
+    [
+      "warning",
+      "bg"
+    ],
+    [
+      "warning",
+      "warning-subtle"
+    ],
+    [
+      "text",
+      "warning-subtle"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ],
+    [
+      "border-input",
+      "surface",
+      "ui"
+    ],
+    [
+      "focus",
+      "bg",
+      "ui"
+    ],
+    [
+      "focus",
+      "surface",
+      "ui"
+    ]
+  ]
+}
