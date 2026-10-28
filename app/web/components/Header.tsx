@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Settings } from "lucide-react";
 import { useT } from "@/lib/prefs";
 import { isFake } from "@/lib/api";
+import { activeTools } from "@/lib/monetize";
 import { IconButton } from "./ui/Button";
 import { SettingsSheet } from "./SettingsSheet";
 import { Wordmark } from "./Wordmark";
@@ -36,6 +37,11 @@ export function Header() {
             <Link href="/apps" className="sv-focus rounded-md px-3 py-2 text-sm font-semibold text-muted hover:text-text">
               {t("nav.apps")}
             </Link>
+            {activeTools.length > 0 && (
+              <Link href="/tools" className="sv-focus rounded-md px-3 py-2 text-sm font-semibold text-muted hover:text-text">
+                {t("nav.tools")}
+              </Link>
+            )}
           </nav>
           <IconButton ref={gear} label={t("nav.settings")} onClick={() => setOpen(true)} className="ms-auto sm:ms-0">
             <Settings className="size-5" strokeWidth={1.75} aria-hidden="true" />

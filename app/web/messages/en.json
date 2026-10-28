@@ -9,7 +9,8 @@
     "apps": "Apps",
     "settings": "Settings",
     "main": "Main",
-    "home": "savideo home"
+    "home": "savideo home",
+    "tools": "Tools"
   },
   "hero": {
     "title": "Paste a link. Get the file. That's it.",
@@ -168,7 +169,8 @@
     "about": "About",
     "contactUs": "Contact us",
     "noStore": "We don't store the files you download.",
-    "rights": "savideo: one link, one file, no ads."
+    "rights": "savideo: one link, one file, no ads.",
+    "tools": "Tools we use"
   },
   "toast": {
     "dismiss": "Dismiss"
@@ -231,5 +233,30 @@
     "title": "Got a link? Try it now.",
     "lead": "No sign-up and nothing to install. Your first file is a paste away.",
     "button": "Paste a link"
+  },
+  "donate": {
+    "cta": "Buy us a coffee",
+    "thanks": "Got your file? savideo is free and has no ads. A small tip keeps it running."
+  },
+  "tools": {
+    "title": "Tools we use",
+    "lead": "A few paid tools that pair well with downloading video. We only list ones we would use ourselves.",
+    "disclosure": "Affiliate links: if you buy through them we earn a commission, at no extra cost to you. It helps keep savideo free.",
+    "badge": "Affiliate link",
+    "open": "Visit site",
+    "items": {
+      "vpn": {
+        "name": "VPN",
+        "body": "Keeps your connection private on public Wi-Fi and helps when a video is blocked in your region."
+      },
+      "compressor": {
+        "name": "Video compressor",
+        "body": "Shrinks big downloads so they fit in a chat message or on your phone."
+      }
+    }
+  },
+  "gate": {
+    "donate": "Like savideo? Buy us a coffee",
+    "tool": "While you wait: {name} (affiliate link)"
   }
 }
