@@ -10,6 +10,8 @@ import { Button } from "../ui/Button";
 import { ProgressBar } from "../ui/Spinner";
 import { SegmentedControl } from "../ui/SegmentedControl";
 import { useToast } from "../ui/Toast";
+import { DONATE_URL } from "@/lib/monetize";
+import { DonateLink } from "../DonateLink";
 import { LimitGate } from "./LimitGate";
 import { MediaHeader } from "./MediaCard";
 import { evaluateTrim, TrimControl, type TrimState } from "./TrimControl";
@@ -194,9 +196,22 @@ export function ResultPanel({
           })}
         </ul>
       </div>
+      {Object.values(rows).includes("done") && <DonateThanks />}
       <p aria-live="polite" className="sr-only">
         {announce}
       </p>
     </section>
+  );
+}
+
+/** Shown once a file has reached the browser. Nothing renders while DONATE_URL is empty. */
+function DonateThanks() {
+  const { t } = usePrefs();
+  if (!DONATE_URL) return null;
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-md bg-surface px-4 py-3">
+      <p className="text-sm text-muted">{t("donate.thanks")}</p>
+      <DonateLink />
+    </div>
   );
 }

@@ -1,12 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useT } from "@/lib/prefs";
+import { activeTools } from "@/lib/monetize";
+import { DonateLink } from "./DonateLink";
 import { Wordmark } from "./Wordmark";
 
 export function Footer() {
   const t = useT();
   const groups = [
-    { title: t("footer.product"), links: [["/", t("footer.home")], ["/apps", t("footer.apps")], ["/faq", t("footer.faq")]] },
+    { title: t("footer.product"), links: [["/", t("footer.home")], ["/apps", t("footer.apps")], ...(activeTools.length ? [["/tools", t("footer.tools")]] : []), ["/faq", t("footer.faq")]] },
     { title: t("footer.legal"), links: [["/terms", t("footer.terms")], ["/privacy", t("footer.privacy")], ["/copyright", t("footer.copyright")]] },
     { title: t("footer.contact"), links: [["/about", t("footer.about")], ["/contact", t("footer.contactUs")]] },
   ];
@@ -17,6 +19,7 @@ export function Footer() {
           <Wordmark />
           <p className="max-w-xs text-sm text-muted">{t("disclaimer.text")}</p>
           <p className="text-sm font-semibold">{t("footer.noStore")}</p>
+          <DonateLink />
         </div>
         {groups.map((g) => (
           <nav key={g.title} aria-label={g.title}>
