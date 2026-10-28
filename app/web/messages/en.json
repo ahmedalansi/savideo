@@ -258,5 +258,14 @@
   "gate": {
     "donate": "Like savideo? Buy us a coffee",
     "tool": "While you wait: {name} (affiliate link)"
+  },
+  "recent": {
+    "title": "Recent downloads",
+    "clearAll": "Clear all",
+    "again": "Re-download: {title}",
+    "remove": "Remove from list: {title}",
+    "trimmed": "Trimmed",
+    "note": "Kept only in this browser, never on our servers.",
+    "settings": "Turn this off in Settings"
   }
 }

@@ -5,13 +5,14 @@ import { PlayCircle } from "lucide-react";
 import { api, isFake } from "@/lib/api";
 import { DEMO_URL } from "@/lib/fake-api";
 import { detectPlatform, isPlaylist, parseUrl, PLATFORMS } from "@/lib/platforms";
-import { usePrefs } from "@/lib/prefs";
+import { usePrefs, type RecentItem } from "@/lib/prefs";
 import { ApiError, type ErrorCode, type MediaInfo, type PlaylistInfo, type Quota } from "@/lib/types";
 import { Button } from "../ui/Button";
 import { StatusMessage } from "../ui/StatusMessage";
 import { MediaCardSkeleton } from "./MediaCard";
 import { PlaylistResult } from "./PlaylistResult";
 import { QuotaMeter } from "./QuotaMeter";
+import { RecentDownloads } from "./RecentDownloads";
 import { ResultPanel } from "./ResultPanel";
 import { UrlInput } from "./UrlInput";
 import { useToast } from "../ui/Toast";
@@ -33,6 +34,8 @@ export function Downloader() {
   const [url, setUrl] = useState("");
   const [view, setView] = useState<View>({ kind: "idle" });
   const [quota, setQuota] = useState<Quota | null>(null);
+  // A recent download being fetched again, numbered so the same one can be replayed twice.
+  const [replay, setReplay] = useState<{ item: RecentItem; n: number } | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const retryTimer = useRef<ReturnType<typeof setInterval>>(undefined);
   const toast = useToast();
@@ -93,7 +96,10 @@ export function Downloader() {
       <UrlInput
         value={url}
         onChange={setUrl}
-        onSubmit={(v) => resolve(v)}
+        onSubmit={(v) => {
+          setReplay(null);
+          resolve(v);
+        }}
         submitting={view.kind === "loading"}
         invalid={inputError}
         describedBy={inputError ? "url-error" : undefined}
@@ -120,6 +126,7 @@ export function Downloader() {
           <button
             type="button"
             onClick={() => {
+              setReplay(null);
               setUrl(DEMO);
               resolve(DEMO);
             }}
@@ -158,17 +165,35 @@ export function Downloader() {
             {errorText}
           </StatusMessage>
         )}
-        {view.kind === "media" && <ResultPanel key={view.info.media_id} info={view.info} sourceUrl={view.url} quota={quota} onQuota={setQuota} />}
+        {view.kind === "media" && (
+          <ResultPanel
+            key={`${view.info.media_id}-${replay?.n ?? 0}`}
+            info={view.info}
+            sourceUrl={view.url}
+            quota={quota}
+            onQuota={setQuota}
+            replay={replay?.item.url === view.url ? replay.item : undefined}
+          />
+        )}
         {view.kind === "playlist" && (
           <PlaylistResult
             list={view.list}
             onPick={(u) => {
+              setReplay(null);
               setUrl(u);
               resolve(u);
             }}
           />
         )}
       </div>
+
+      <RecentDownloads
+        onReplay={(item) => {
+          setReplay((r) => ({ item, n: (r?.n ?? 0) + 1 }));
+          setUrl(item.url);
+          resolve(item.url);
+        }}
+      />
     </div>
   );
 }
