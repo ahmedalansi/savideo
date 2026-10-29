@@ -2,8 +2,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Download, Music, Video } from "lucide-react";
 import { api } from "@/lib/api";
-import { clipSize, formatBytes } from "@/lib/format";
-import { usePrefs, type DefaultQuality } from "@/lib/prefs";
+import { clipSize, formatBytes, formatDuration } from "@/lib/format";
+import { usePrefs, type DefaultQuality, type RecentItem } from "@/lib/prefs";
 import { ApiError, type FormatKind, type MediaFormat, type MediaInfo, type Quota } from "@/lib/types";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
@@ -32,22 +32,39 @@ function qualityLabel(f: MediaFormat) {
   return `${f.height}p`;
 }
 
+/** The format a saved download used: same id if the platform kept it, else the same quality. */
+function replayFormat(formats: MediaFormat[], item: RecentItem): MediaFormat | undefined {
+  const label = item.label.replace(/ ✂$/, "");
+  return formats.find((f) => f.format_id === item.format_id) ?? formats.find((f) => qualityLabel(f) === label);
+}
+
+function replayTrim(item: RecentItem | undefined, duration: number): TrimState {
+  if (item?.trim_start_s == null || item.trim_end_s == null || item.trim_end_s > duration) return { open: false, start: "0:00", end: "" };
+  return { open: true, start: formatDuration(item.trim_start_s), end: formatDuration(item.trim_end_s) };
+}
+
 export function ResultPanel({
   info,
   sourceUrl,
   quota,
   onQuota,
+  replay,
 }: {
   info: MediaInfo;
   sourceUrl: string;
   quota: Quota | null;
   onQuota: (q: Quota) => void;
+  /** A recent download to fetch again: its format and trim are picked and the download starts. */
+  replay?: RecentItem;
 }) {
   const { prefs, t, addRecent } = usePrefs();
   const toast = useToast();
   const best = recommended(info.formats, prefs.quality);
-  const [kind, setKind] = useState<FormatKind>(prefs.quality === "mp3" && info.audio_supported ? "audio" : "video");
-  const [trim, setTrim] = useState<TrimState>({ open: false, start: "0:00", end: "" });
+  const replayed = replay ? replayFormat(info.formats, replay) : undefined;
+  const [kind, setKind] = useState<FormatKind>(
+    replayed?.kind ?? (prefs.quality === "mp3" && info.audio_supported ? "audio" : "video"),
+  );
+  const [trim, setTrim] = useState<TrimState>(() => replayTrim(replayed && replay, info.duration_s));
   const [rows, setRows] = useState<Record<string, RowState>>({});
   const [announce, setAnnounce] = useState("");
   const trimResult = evaluateTrim(trim, info.duration_s, t);
@@ -95,7 +112,15 @@ export function ResultPanel({
       a.remove();
       setRow(f.format_id, "downloading", label);
       toast("success", t("result.startedToast"));
-      addRecent({ title: info.title, url: sourceUrl, label: trimResult.trimmed ? `${label} ✂` : label });
+      addRecent({
+        title: info.title,
+        url: sourceUrl,
+        label: trimResult.trimmed ? `${label} ✂` : label,
+        thumbnail_url: info.thumbnail_url,
+        kind: f.kind,
+        format_id: f.format_id,
+        ...(trimResult.trimmed ? { trim_start_s: trimResult.start, trim_end_s: trimResult.end } : {}),
+      });
       setTimeout(() => setRow(f.format_id, "done", label), 2000);
     } catch (e) {
       setRow(f.format_id, "idle", label);
@@ -109,11 +134,20 @@ export function ResultPanel({
     }
   };
 
+  // Runs once per mount; the panel is re-keyed for every replay.
+  useEffect(() => {
+    if (replayed && !blocked) download(replayed);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <section aria-labelledby="result-title" className="space-y-5 rounded-lg border border-border bg-surface-raised p-4 shadow-card sm:p-6">
       <span id="result-title" className="sr-only">
         {info.title}
       </span>
+      <p aria-live="polite" className="sr-only">
+        {announce}
+      </p>
       <MediaHeader info={info} />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -197,9 +231,6 @@ export function ResultPanel({
         </ul>
       </div>
       {Object.values(rows).includes("done") && <DonateThanks />}
-      <p aria-live="polite" className="sr-only">
-        {announce}
-      </p>
     </section>
   );
 }

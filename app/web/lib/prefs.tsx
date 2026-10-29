@@ -20,6 +20,12 @@ export interface RecentItem {
   url: string;
   label: string;
   saved_at: string;
+  // Added later; older saved items may not have them.
+  thumbnail_url?: string | null;
+  kind?: "video" | "audio";
+  format_id?: string;
+  trim_start_s?: number;
+  trim_end_s?: number;
 }
 
 const PREFS_KEY = "sv.prefs";
@@ -34,6 +40,7 @@ interface Ctx {
   setPrefs: (p: Partial<Prefs>) => void;
   recent: RecentItem[];
   addRecent: (item: Omit<RecentItem, "saved_at">) => void;
+  removeRecent: (saved_at: string) => void;
   clearRecent: () => void;
   t: (key: string, vars?: Vars) => string;
 }
@@ -72,7 +79,8 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setState(read(PREFS_KEY, DEFAULTS));
     try {
-      setRecent(JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]"));
+      const saved = JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]");
+      if (Array.isArray(saved)) setRecent(saved.filter((r) => r && typeof r.url === "string" && typeof r.saved_at === "string"));
     } catch {}
   }, []);
 
@@ -102,7 +110,11 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
     (item: Omit<RecentItem, "saved_at">) => {
       if (!prefs.keepHistory) return;
       setRecent((prev) => {
-        const list = [{ ...item, saved_at: new Date().toISOString() }, ...prev].slice(0, 20);
+        // Inline images can be big; remote thumbnails are just a link.
+        const thumb = item.thumbnail_url && item.thumbnail_url.length <= 4096 ? item.thumbnail_url : null;
+        const same = (r: RecentItem) =>
+          r.url === item.url && r.label === item.label && r.trim_start_s === item.trim_start_s && r.trim_end_s === item.trim_end_s;
+        const list = [{ ...item, thumbnail_url: thumb, saved_at: new Date().toISOString() }, ...prev.filter((r) => !same(r))].slice(0, 20);
         try {
           localStorage.setItem(RECENT_KEY, JSON.stringify(list));
         } catch {}
@@ -112,6 +124,16 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
     [prefs.keepHistory],
   );
 
+  const removeRecent = useCallback((saved_at: string) => {
+    setRecent((prev) => {
+      const list = prev.filter((r) => r.saved_at !== saved_at);
+      try {
+        localStorage.setItem(RECENT_KEY, JSON.stringify(list));
+      } catch {}
+      return list;
+    });
+  }, []);
+
   const t = useCallback(
     (key: string, vars?: Vars) =>
       lookup(prefs.lang, key).replace(/\{(\w+)\}/g, (_, k) => (vars && k in vars ? String(vars[k]) : `{${k}}`)),
@@ -119,8 +141,8 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ prefs, setPrefs, recent, addRecent, clearRecent: () => saveRecent([]), t }),
-    [prefs, setPrefs, recent, addRecent, t],
+    () => ({ prefs, setPrefs, recent, addRecent, removeRecent, clearRecent: () => saveRecent([]), t }),
+    [prefs, setPrefs, recent, addRecent, removeRecent, t],
   );
   return <PrefsContext.Provider value={value}>{children}</PrefsContext.Provider>;
 }
@@ -132,3 +154,7 @@ export function usePrefs(): Ctx {
 }
 
 export const useT = () => usePrefs().t;
+
+// Lets any part of the page open the settings sheet that lives in the header.
+export const OPEN_SETTINGS_EVENT = "sv:open-settings";
+export const openSettings = () => window.dispatchEvent(new Event(OPEN_SETTINGS_EVENT));

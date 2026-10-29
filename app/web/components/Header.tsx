@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Settings } from "lucide-react";
-import { useT } from "@/lib/prefs";
+import { OPEN_SETTINGS_EVENT, useT } from "@/lib/prefs";
 import { isFake } from "@/lib/api";
 import { activeTools } from "@/lib/monetize";
 import { IconButton } from "./ui/Button";
@@ -13,6 +13,12 @@ export function Header() {
   const t = useT();
   const [open, setOpen] = useState(false);
   const gear = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const show = () => setOpen(true);
+    window.addEventListener(OPEN_SETTINGS_EVENT, show);
+    return () => window.removeEventListener(OPEN_SETTINGS_EVENT, show);
+  }, []);
 
   return (
     <>
