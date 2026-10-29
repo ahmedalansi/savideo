@@ -267,5 +267,12 @@
     "trimmed": "Trimmed",
     "note": "Kept only in this browser, never on our servers.",
     "settings": "Turn this off in Settings"
+  },
+  "makers": {
+    "label": "From the makers of savideo",
+    "name": "Fridge Feast",
+    "body": "Meal plans and recipes from what's already in your fridge, so less food goes to waste. Free on Android.",
+    "open": "Get it on Google Play",
+    "gate": "From the makers of savideo: Fridge Feast on Google Play"
   }
 }

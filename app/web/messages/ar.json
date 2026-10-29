@@ -267,5 +267,12 @@
     "trimmed": "مقصوص",
     "note": "محفوظة في هذا المتصفح فقط، ولا تصل إلى خوادمنا.",
     "settings": "أوقفها من الإعدادات"
+  },
+  "makers": {
+    "label": "من صنّاع savideo",
+    "name": "Fridge Feast",
+    "body": "خطط وجبات ووصفات مما في ثلاجتك أصلًا، لتقليل هدر الطعام. مجاني على أندرويد.",
+    "open": "حمّله من Google Play",
+    "gate": "من صنّاع savideo: تطبيق Fridge Feast على Google Play"
   }
 }

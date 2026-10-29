@@ -24,6 +24,14 @@ test.describe("S10-S15 static pages", () => {
     }
   });
 
+  test("P-apps our Android app links to Google Play in a new tab", async ({ page }) => {
+    await page.goto("/apps");
+    const link = page.getByRole("link", { name: "Get it on Google Play" });
+    await expect(link).toHaveAttribute("href", /com\.ownsupernoob\.fridgefeast/);
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", /noopener/);
+  });
+
   test("P-404 unknown page shows the not-found page", async ({ page }) => {
     const r = await page.goto("/nope-nope");
     expect(r?.status()).toBe(404);
