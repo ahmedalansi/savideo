@@ -4,6 +4,9 @@
 /** Your Ko-fi page, e.g. "https://ko-fi.com/yourname". */
 export const DONATE_URL = "https://ko-fi.com/savideo";
 
+/** Our own Android app on Google Play, shown on /apps and (optionally) under the countdown. */
+export const MAKERS_APP_URL = "https://play.google.com/store/apps/details?id=com.ownsupernoob.fridgefeast";
+
 export type ToolId = "vpn" | "compressor";
 
 /** Affiliate partners on /tools. Names and blurbs live in messages/*.json under tools.items.<id>. */
@@ -14,9 +17,9 @@ export const TOOLS: { id: ToolId; url: string }[] = [
 
 /**
  * What sits under the countdown when the free limit is used up:
- * "donate", a tool id, "apps" (the extension/app page) or null for nothing.
+ * "donate", "makers" (our own app on Google Play), a tool id, "apps" (the extension/app page) or null for nothing.
  */
-export const GATE_SLOT: "donate" | "apps" | ToolId | null = "donate";
+export const GATE_SLOT: "donate" | "makers" | "apps" | ToolId | null = "makers";
 
 export const activeTools = TOOLS.filter((t) => t.url);
 export const toolUrl = (id: ToolId) => TOOLS.find((t) => t.id === id)?.url ?? "";

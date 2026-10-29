@@ -17,6 +17,9 @@ test.describe("F04 free limit", () => {
     await expect(page.getByRole("heading", { name: "That's this hour's 3 free downloads" })).toBeVisible();
     await expect(page.getByText(/Next free download in \d+:\d\d/)).toBeVisible();
     await expect(page.getByRole("button", { name: /^Download / })).toHaveCount(0);
+    const app = page.getByRole("link", { name: /From the makers of savideo/ });
+    await expect(app).toHaveAttribute("href", /play\.google\.com\/store\/apps\/details\?id=com\.ownsupernoob\.fridgefeast/);
+    await expect(app).toHaveAttribute("target", "_blank");
     await axe(page, "S06 gate");
   });
 

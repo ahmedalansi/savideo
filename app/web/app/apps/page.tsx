@@ -1,5 +1,6 @@
 import { Chrome, Smartphone } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
+import { MakersApp } from "@/components/MakersApp";
 import { ButtonLink } from "@/components/ui/Button";
 
 export const metadata = { title: "Extension and app | savideo" };
@@ -20,6 +21,7 @@ export default function AppsPage() {
           </li>
         ))}
       </ul>
+      <MakersApp />
       <div className="mt-8">
         <ButtonLink href="/" variant="secondary">
           Back to the downloader

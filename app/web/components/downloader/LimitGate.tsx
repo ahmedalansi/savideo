@@ -1,7 +1,7 @@
 "use client";
-import { Clock, Heart } from "lucide-react";
+import { Clock, Heart, Smartphone } from "lucide-react";
 import { useT } from "@/lib/prefs";
-import { DONATE_URL, GATE_SLOT, toolUrl } from "@/lib/monetize";
+import { DONATE_URL, GATE_SLOT, MAKERS_APP_URL, toolUrl } from "@/lib/monetize";
 import { buttonClass, ButtonLink } from "../ui/Button";
 import { Countdown } from "./Countdown";
 
@@ -37,6 +37,15 @@ function GateSlot() {
       <a href={DONATE_URL} target="_blank" rel="noopener" className={buttonClass("ghost", "sm")}>
         <Heart className="size-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
         {t("gate.donate")}
+      </a>
+    );
+  }
+  if (GATE_SLOT === "makers") {
+    if (!MAKERS_APP_URL) return null;
+    return (
+      <a href={MAKERS_APP_URL} target="_blank" rel="noopener" className={buttonClass("ghost", "sm")}>
+        <Smartphone className="size-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
+        {t("makers.gate")}
       </a>
     );
   }
