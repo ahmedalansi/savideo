@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useT } from "@/lib/prefs";
 import { activeTools } from "@/lib/monetize";
 import { DonateLink } from "./DonateLink";
+import { MakersLink } from "./MakersApp";
 import { Wordmark } from "./Wordmark";
 
 export function Footer() {
@@ -20,6 +21,9 @@ export function Footer() {
           <p className="max-w-xs text-sm text-muted">{t("disclaimer.text")}</p>
           <p className="text-sm font-semibold">{t("footer.noStore")}</p>
           <DonateLink />
+          <div>
+            <MakersLink />
+          </div>
         </div>
         {groups.map((g) => (
           <nav key={g.title} aria-label={g.title}>

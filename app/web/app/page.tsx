@@ -1,4 +1,5 @@
 import { Hero } from "@/components/home/Hero";
+import { MakersApp } from "@/components/MakersApp";
 import { PlatformGrid } from "@/components/home/PlatformGrid";
 import { Problem } from "@/components/home/Problem";
 import { HowTo } from "@/components/home/HowTo";
@@ -12,6 +13,7 @@ export default function Home() {
     <>
       <Hero />
       <div className="mx-auto max-w-content space-y-16 sv-gutter pt-16 md:space-y-24 md:pt-24">
+        <MakersApp className="mx-auto max-w-tool" />
         <PlatformGrid />
         <Problem />
         <HowTo />
