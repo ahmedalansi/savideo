@@ -21,7 +21,7 @@ export default function AppsPage() {
           </li>
         ))}
       </ul>
-      <MakersApp />
+      <MakersApp className="mt-8" />
       <div className="mt-8">
         <ButtonLink href="/" variant="secondary">
           Back to the downloader

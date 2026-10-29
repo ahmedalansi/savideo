@@ -32,6 +32,14 @@ test.describe("S10-S15 static pages", () => {
     await expect(link).toHaveAttribute("rel", /noopener/);
   });
 
+  test("P-home our Android app shows on the home page and in the footer", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("link", { name: "Get it on Google Play" })).toHaveAttribute("href", /com\.ownsupernoob\.fridgefeast/);
+    const footer = page.getByRole("contentinfo").getByRole("link", { name: "Fridge Feast, our Android app" });
+    await expect(footer).toHaveAttribute("href", /com\.ownsupernoob\.fridgefeast/);
+    await expect(footer).toHaveAttribute("target", "_blank");
+  });
+
   test("P-404 unknown page shows the not-found page", async ({ page }) => {
     const r = await page.goto("/nope-nope");
     expect(r?.status()).toBe(404);
