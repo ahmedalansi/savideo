@@ -52,7 +52,8 @@ test.describe("F01 download a video", () => {
     let calls = 0;
     page.on("request", (r) => r.url().includes("/media/resolve") && calls++);
     await page.goto("/");
-    await page.getByRole("button", { name: "Get video" }).click();
+    // An empty field shows the paste button, so submit with Enter.
+    await page.getByLabel("Video link").press("Enter");
     await expect(alert(page)).toContainText("doesn't look like a link");
     expect(calls).toBe(0);
   });

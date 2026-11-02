@@ -23,7 +23,7 @@ type RowState = "idle" | "preparing" | "downloading" | "done";
 
 function recommended(formats: MediaFormat[], pref: DefaultQuality): string | undefined {
   if (pref === "mp3") return formats.find((f) => f.kind === "audio")?.format_id;
-  const cap = pref === "1080" ? 1080 : pref === "720" ? 720 : Infinity;
+  const cap = pref === "2160" ? 2160 : pref === "1080" ? 1080 : pref === "720" ? 720 : Infinity;
   return formats.filter((f) => f.kind === "video" && (f.height ?? 0) <= cap).sort((a, b) => (b.height ?? 0) - (a.height ?? 0))[0]?.format_id;
 }
 

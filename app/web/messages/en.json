@@ -22,7 +22,8 @@
     "clear": "Clear the link",
     "submit": "Get video",
     "pasteDenied": "Your browser blocked the clipboard. Press Ctrl+V (or Cmd+V) in the field instead.",
-    "demo": "No link handy? Try a demo video"
+    "demo": "No link handy? Try a demo video",
+    "qualityGroup": "Preferred quality"
   },
   "quota": {
     "left": "{left} of {limit} free downloads left this hour",
@@ -154,7 +155,8 @@
     "clear": "Clear history",
     "recent": "Recent downloads",
     "recentEmpty": "Nothing here yet. Your recent downloads show up here, and only on this device.",
-    "open": "Open link"
+    "open": "Open link",
+    "q2160": "4K"
   },
   "footer": {
     "product": "Product",

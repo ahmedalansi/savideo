@@ -66,6 +66,7 @@ export function SettingsSheet({ open, onClose }: { open: boolean; onClose: () =>
               className="w-full"
               segments={[
                 { value: "best", label: t("settings.qBest") },
+                { value: "2160", label: t("settings.q2160") },
                 { value: "1080", label: t("settings.q1080") },
                 { value: "720", label: t("settings.q720") },
                 { value: "mp3", label: t("settings.qMp3") },

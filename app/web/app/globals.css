@@ -106,3 +106,79 @@ dialog::backdrop {
   --sv-font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 :root[lang="ar"] { --sv-font-sans: var(--sv-font-arabic); }
+
+/* Hero link field: corner brackets around it, gradient border while focused. */
+@utility sv-brackets {
+  position: relative;
+  isolation: isolate;
+  padding: 0.75rem;
+  --sv-bracket: color-mix(in oklab, var(--sv-color-accent) 75%, transparent);
+  background:
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) top left / 1.25rem 3px,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) top left / 3px 1.25rem,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) top right / 1.25rem 3px,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) top right / 3px 1.25rem,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) bottom left / 1.25rem 3px,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) bottom left / 3px 1.25rem,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) bottom right / 1.25rem 3px,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) bottom right / 3px 1.25rem;
+  background-repeat: no-repeat;
+}
+
+/* A spark of light that runs around the link field's border. */
+@property --sv-spark {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+@keyframes sv-spark {
+  to { --sv-spark: 360deg; }
+}
+
+@utility sv-linkbox {
+  position: relative;
+  border: 3px solid transparent;
+  --sv-spark-arc: conic-gradient(
+    from var(--sv-spark),
+    transparent 0 55%,
+    color-mix(in oklab, var(--sv-color-accent) 60%, transparent) 76%,
+    var(--sv-color-accent) 86%,
+    #6ff7e4 93%,
+    #ffffff 95%,
+    transparent 97%
+  );
+  --sv-edge: linear-gradient(var(--sv-color-border), var(--sv-color-border));
+  background:
+    linear-gradient(var(--sv-color-surface-raised), var(--sv-color-surface-raised)) padding-box,
+    var(--sv-spark-arc) border-box,
+    var(--sv-edge) border-box;
+  animation: sv-spark 3s linear infinite;
+  transition: box-shadow var(--sv-motion-fast);
+  /* Soft glow that follows the spark, behind the field. */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--sv-spark-arc);
+    filter: blur(12px);
+    opacity: 1;
+    pointer-events: none;
+  }
+  &:focus-within,
+  &[data-busy] {
+    --sv-edge: linear-gradient(90deg, var(--sv-color-accent), color-mix(in oklab, var(--sv-color-accent) 35%, #3ee0c8));
+    animation-duration: 1.6s;
+    box-shadow: 0 6px 24px -8px color-mix(in oklab, var(--sv-color-accent) 45%, transparent);
+  }
+  &[aria-invalid="true"] {
+    --sv-edge: linear-gradient(var(--sv-color-danger), var(--sv-color-danger));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    &::before {
+      display: none;
+    }
+  }
+}
