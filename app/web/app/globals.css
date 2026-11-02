@@ -106,3 +106,40 @@ dialog::backdrop {
   --sv-font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 :root[lang="ar"] { --sv-font-sans: var(--sv-font-arabic); }
+
+/* Hero link field: corner brackets around it, gradient border while focused. */
+@utility sv-brackets {
+  position: relative;
+  padding: 0.75rem;
+  --sv-bracket: color-mix(in oklab, var(--sv-color-accent) 75%, transparent);
+  background:
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) top left / 1.25rem 3px,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) top left / 3px 1.25rem,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) top right / 1.25rem 3px,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) top right / 3px 1.25rem,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) bottom left / 1.25rem 3px,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) bottom left / 3px 1.25rem,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) bottom right / 1.25rem 3px,
+    linear-gradient(var(--sv-bracket), var(--sv-bracket)) bottom right / 3px 1.25rem;
+  background-repeat: no-repeat;
+}
+
+@utility sv-linkbox {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--sv-color-surface-raised), var(--sv-color-surface-raised)) padding-box,
+    linear-gradient(var(--sv-color-border), var(--sv-color-border)) border-box;
+  transition: box-shadow var(--sv-motion-fast);
+  &:focus-within,
+  &[data-busy] {
+    background:
+      linear-gradient(var(--sv-color-surface-raised), var(--sv-color-surface-raised)) padding-box,
+      linear-gradient(90deg, var(--sv-color-accent), color-mix(in oklab, var(--sv-color-accent) 35%, #3ee0c8)) border-box;
+    box-shadow: 0 6px 24px -8px color-mix(in oklab, var(--sv-color-accent) 45%, transparent);
+  }
+  &[aria-invalid="true"] {
+    background:
+      linear-gradient(var(--sv-color-surface-raised), var(--sv-color-surface-raised)) padding-box,
+      linear-gradient(var(--sv-color-danger), var(--sv-color-danger)) border-box;
+  }
+}

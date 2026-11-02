@@ -6,7 +6,7 @@ import ar from "@/messages/ar.json";
 
 export type Theme = "system" | "light" | "dark";
 export type Lang = "en" | "ar";
-export type DefaultQuality = "best" | "1080" | "720" | "mp3";
+export type DefaultQuality = "best" | "2160" | "1080" | "720" | "mp3";
 
 export interface Prefs {
   theme: Theme;
