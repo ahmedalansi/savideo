@@ -241,7 +241,7 @@ export function ResultPanel({
                       </Button>
                     ) : (
                       <Button
-                        variant={isBest && state !== "done" ? "primary" : "secondary"}
+                        variant={(isBest || kind === "audio") && state !== "done" ? "primary" : "secondary"}
                         loading={state === "preparing"}
                         disabled={!trimResult.ok || state === "preparing" || state === "downloading"}
                         onClick={() => download(f)}
