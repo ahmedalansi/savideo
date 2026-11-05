@@ -7,12 +7,14 @@ Playwright end-to-end tests for the web app on the real API, from `/replica-test
 ```bash
 # once
 (cd ../api && python -m venv .venv && .venv/bin/pip install -r requirements-dev.txt)
-(cd ../web && npm ci && NEXT_PUBLIC_API_BASE=http://localhost:8000/v1 npm run build)
+(cd ../web && npm ci && NEXT_PUBLIC_API_BASE=http://localhost:8000/v1 NEXT_PUBLIC_WAIT_AD_SECONDS=0 npm run build)
 npm ci
 
 # each run (starts the API and the web app if they are not running)
 LANG=C.UTF-8 npx playwright test
 ```
+
+The build sets `NEXT_PUBLIC_WAIT_AD_SECONDS=0`, which turns off the progress and ad window so downloads start at once.
 
 Needs `redis-server`, Postgres 16 in `/usr/lib/postgresql/16/bin`, `ffmpeg`/`ffprobe`. `LANG=C.UTF-8` keeps non-ASCII download file names in headless Chromium.
 
