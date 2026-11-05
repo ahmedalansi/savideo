@@ -277,5 +277,58 @@
     "open": "Get it on Google Play",
     "gate": "From the makers of savideo: Fridge Feast on Google Play",
     "footer": "Fridge Feast, our Android app"
+  },
+  "wait": {
+    "ad": "Ad",
+    "adLabel": "Advertisement",
+    "adNote": "Ad from the makers of savideo",
+    "steps": {
+      "snap": "Snap your fridge",
+      "pick": "Pick ingredients",
+      "cook": "Get a recipe",
+      "plan": "Plan your week"
+    },
+    "tabs": {
+      "snap": "Snap",
+      "pick": "Pick",
+      "cook": "Cook",
+      "plan": "Plan"
+    },
+    "food": {
+      "a": "Tomato",
+      "b": "Eggs",
+      "c": "Cheese",
+      "d": "Pepper",
+      "e": "Onion",
+      "f": "Rice"
+    },
+    "recipe": "Pepper shakshuka",
+    "recipeMeta": "15 min · 4 ingredients",
+    "week": {
+      "d1": "Sat · Shakshuka",
+      "d2": "Sun · Veggie rice",
+      "d3": "Mon · Cheese omelette"
+    },
+    "close": "Close",
+    "progress": "Preparing progress",
+    "preparingAudio": "Preparing your audio",
+    "preparingVideo": "Preparing your video",
+    "readyAudio": "Your audio is ready",
+    "readyVideo": "Your video is ready",
+    "stage": {
+      "analyze": "Reading link",
+      "fetchAudio": "Fetching audio",
+      "fetchVideo": "Fetching video",
+      "fetchBoth": "Fetching video and audio",
+      "trim": "Cutting clip",
+      "toMp3": "Converting to MP3",
+      "merge": "Merging",
+      "check": "Checking file",
+      "finish": "Finishing"
+    },
+    "download": "Download file",
+    "preparing": "Preparing",
+    "note": "The ad keeps changing until your file is ready",
+    "readyNote": "Your file is ready. Press Download file."
   }
 }

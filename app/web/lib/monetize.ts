@@ -23,3 +23,16 @@ export const GATE_SLOT: "donate" | "makers" | "apps" | ToolId | null = "makers";
 
 export const activeTools = TOOLS.filter((t) => t.url);
 export const toolUrl = (id: ToolId) => TOOLS.find((t) => t.id === id)?.url ?? "";
+
+/**
+ * The wait window that opens after Download: conversion progress plus an ad.
+ * Seconds the window stays up before the file is handed over (at least until the API answers).
+ * 0 turns the window off and the download starts at once. NEXT_PUBLIC_WAIT_AD_SECONDS overrides it.
+ */
+export const WAIT_AD_SECONDS = (() => {
+  const n = Number(process.env.NEXT_PUBLIC_WAIT_AD_SECONDS ?? 8);
+  return Number.isFinite(n) && n >= 0 ? n : 8;
+})();
+
+/** What the wait window advertises: "makers" (our own app on Google Play) or null for no ad. */
+export const WAIT_AD: "makers" | null = "makers";

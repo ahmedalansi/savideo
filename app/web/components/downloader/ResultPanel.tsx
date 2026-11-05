@@ -4,22 +4,26 @@ import { Check, Download, Music, Video } from "lucide-react";
 import { api } from "@/lib/api";
 import { clipSize, formatBytes, formatDuration } from "@/lib/format";
 import { usePrefs, type DefaultQuality, type RecentItem } from "@/lib/prefs";
-import { ApiError, type FormatKind, type MediaFormat, type MediaInfo, type Quota } from "@/lib/types";
+import { ApiError, type DownloadTicket, type FormatKind, type MediaFormat, type MediaInfo, type Quota } from "@/lib/types";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { ProgressBar } from "../ui/Spinner";
 import { SegmentedControl } from "../ui/SegmentedControl";
 import { useToast } from "../ui/Toast";
-import { DONATE_URL } from "@/lib/monetize";
+import { DONATE_URL, WAIT_AD_SECONDS } from "@/lib/monetize";
 import { DonateLink } from "../DonateLink";
 import { LimitGate } from "./LimitGate";
 import { MediaHeader } from "./MediaCard";
 import { evaluateTrim, TrimControl, type TrimState } from "./TrimControl";
+import { WaitModal, type WaitJob } from "./WaitModal";
 import { cx } from "@/lib/cx";
 
 const MAX_BYTES = 4e9;
 
 type RowState = "idle" | "preparing" | "downloading" | "done";
+
+type Clip = { trimmed: boolean; start: number; end: number };
+type Pending = { f: MediaFormat; label: string; ticket: DownloadTicket; clip: Clip };
 
 function recommended(formats: MediaFormat[], pref: DefaultQuality): string | undefined {
   if (pref === "mp3") return formats.find((f) => f.kind === "audio")?.format_id;
@@ -90,39 +94,59 @@ export function ResultPanel({
     if (word) setAnnounce(t("result.listStatus", { label, state: word }));
   };
 
+  const sizeText = (f: MediaFormat) => {
+    const size = trimResult.ok ? clipSize(f.size_estimate, info.duration_s, trimResult.start, trimResult.end) : f.size_estimate;
+    return size == null ? t("result.unknownSize") : t("result.about", { size: formatBytes(size) });
+  };
+
+  // The wait window (progress + ad) and the link it hands over once ready.
+  const [wait, setWait] = useState<WaitJob | null>(null);
+  const pending = useRef<Pending | undefined>(undefined);
+
+  /** Hands the file to the browser's own download manager (works on iOS Safari too). */
+  const deliver = ({ f, label, ticket, clip }: Pending) => {
+    const a = document.createElement("a");
+    a.href = ticket.download_url;
+    a.rel = "noopener";
+    a.setAttribute("download", "");
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setRow(f.format_id, "downloading", label);
+    toast("success", t("result.startedToast"));
+    addRecent({
+      title: info.title,
+      url: sourceUrl,
+      label: clip.trimmed ? `${label} ✂` : label,
+      thumbnail_url: info.thumbnail_url,
+      kind: f.kind,
+      format_id: f.format_id,
+      ...(clip.trimmed ? { trim_start_s: clip.start, trim_end_s: clip.end } : {}),
+    });
+    setTimeout(() => setRow(f.format_id, "done", label), 2000);
+  };
+
   const download = async (f: MediaFormat) => {
     if (!trimResult.ok) return;
     const label = qualityLabel(f);
+    const clip: Clip = { trimmed: trimResult.trimmed, start: trimResult.start, end: trimResult.end };
+    const withWait = WAIT_AD_SECONDS > 0;
     setRow(f.format_id, "preparing", label);
+    if (withWait) setWait({ format: f, label, trimmed: clip.trimmed, ticketReady: false, sizeText: sizeText(f) });
     try {
       const ticket = await api.createDownload({
         media_id: info.media_id,
         format_id: f.format_id,
         kind: f.kind,
-        ...(trimResult.trimmed ? { trim_start_s: trimResult.start, trim_end_s: trimResult.end } : {}),
+        ...(clip.trimmed ? { trim_start_s: clip.start, trim_end_s: clip.end } : {}),
       });
       onQuota(ticket.quota);
-      // Hand the file to the browser's own download manager (works on iOS Safari too).
-      const a = document.createElement("a");
-      a.href = ticket.download_url;
-      a.rel = "noopener";
-      a.setAttribute("download", "");
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setRow(f.format_id, "downloading", label);
-      toast("success", t("result.startedToast"));
-      addRecent({
-        title: info.title,
-        url: sourceUrl,
-        label: trimResult.trimmed ? `${label} ✂` : label,
-        thumbnail_url: info.thumbnail_url,
-        kind: f.kind,
-        format_id: f.format_id,
-        ...(trimResult.trimmed ? { trim_start_s: trimResult.start, trim_end_s: trimResult.end } : {}),
-      });
-      setTimeout(() => setRow(f.format_id, "done", label), 2000);
+      if (withWait) {
+        pending.current = { f, label, ticket, clip };
+        setWait((w) => (w ? { ...w, ticketReady: true } : w));
+      } else deliver({ f, label, ticket, clip });
     } catch (e) {
+      setWait(null);
       setRow(f.format_id, "idle", label);
       if (e instanceof ApiError && e.code === "quota_exceeded") {
         if (e.quota) onQuota(e.quota);
@@ -132,6 +156,21 @@ export function ResultPanel({
       const code = e instanceof ApiError ? e.code : "network";
       toast("error", t(`errors.${code}`, { seconds: 5, list: "" }) || t("result.failedToast"));
     }
+  };
+
+  const downloadFromWait = () => {
+    const p = pending.current;
+    pending.current = undefined;
+    setWait(null);
+    if (p) deliver(p);
+  };
+
+  // Closed once ready without taking the file: the row goes back to Download.
+  const closeWait = () => {
+    const p = pending.current;
+    pending.current = undefined;
+    setWait(null);
+    if (p) setRow(p.f.format_id, "idle", p.label);
   };
 
   // Runs once per mount; the panel is re-keyed for every replay.
@@ -178,7 +217,7 @@ export function ResultPanel({
           {list.map((f) => {
             const state = rows[f.format_id] ?? "idle";
             const size = trimResult.ok ? clipSize(f.size_estimate, info.duration_s, trimResult.start, trimResult.end) : f.size_estimate;
-            const sizeText = size == null ? t("result.unknownSize") : t("result.about", { size: formatBytes(size) });
+            const sizeLabel = sizeText(f);
             const tooLarge = size != null && size > MAX_BYTES;
             const label = qualityLabel(f);
             const isBest = f.format_id === best;
@@ -192,7 +231,7 @@ export function ResultPanel({
                     {f.needs_merge && <Badge>{t("result.merged")}</Badge>}
                     {isBest && <Badge tone="success">{t("result.best")}</Badge>}
                     <span className="w-full text-sm text-muted sm:w-auto sm:ms-auto">
-                      <span className="sv-ltr">{sizeText}</span>
+                      <span className="sv-ltr">{sizeLabel}</span>
                     </span>
                   </div>
                   {!blocked &&
@@ -206,7 +245,7 @@ export function ResultPanel({
                         loading={state === "preparing"}
                         disabled={!trimResult.ok || state === "preparing" || state === "downloading"}
                         onClick={() => download(f)}
-                        aria-label={t("result.downloadAria", { label, size: sizeText })}
+                        aria-label={t("result.downloadAria", { label, size: sizeLabel })}
                         icon={state === "done" ? <Check className="size-4 text-success" aria-hidden="true" /> : <Download className="size-4" aria-hidden="true" />}
                         className="min-w-32"
                       >
@@ -231,6 +270,7 @@ export function ResultPanel({
         </ul>
       </div>
       {Object.values(rows).includes("done") && <DonateThanks />}
+      <WaitModal job={wait} onDownload={downloadFromWait} onClose={closeWait} />
     </section>
   );
 }
