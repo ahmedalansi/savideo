@@ -9,6 +9,7 @@ import os
 import re
 import shutil
 import tempfile
+from html import unescape
 from typing import Any, Protocol
 from urllib.parse import parse_qs, urljoin, urlsplit
 
@@ -49,6 +50,24 @@ def _next_from_login(url: str) -> str | None:
     return None
 
 
+_PAGE_URL = re.compile(
+    r"""<meta[^>]+property=["']og:url["'][^>]+content=["']([^"']+)"""
+    r"""|<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)"""
+    r"""|["'](https?:(?:\\?/){2}[^"'\s<>]+?/(?:videos|reel|watch)[^"'\s<>]*)["']""",
+    re.I,
+)
+
+
+def _url_from_page(html: str, pid: str | None) -> str | None:
+    """A share link that answers 200 names the real link in og:url, the canonical link or the page data."""
+    for m in _PAGE_URL.finditer(html):
+        cand = next(g for g in m.groups() if g)
+        cand = unescape(cand).replace("\\/", "/")
+        if detect_platform(cand) == pid and has_extractor(cand):
+            return cand
+    return None
+
+
 def expand_share_link(url: str, proxy: str | None, client: httpx.Client | None = None) -> str:
     """Follow the redirects of a share link (facebook.com/share/v/.., fb.watch, reddit /s/..)
     until yt-dlp knows the link. The apps copy these, and only the generic extractor,
@@ -68,6 +87,14 @@ def expand_share_link(url: str, proxy: str | None, client: httpx.Client | None =
                         if resp.status_code in (403, 429):
                             raise ApiError("platform_down", f"HTTP Error {resp.status_code} while opening share link")
                         if not resp.is_redirect:
+                            body = b""
+                            for chunk in resp.iter_bytes():
+                                body += chunk
+                                if len(body) > 1_500_000:
+                                    break
+                            found = _url_from_page(body.decode("utf-8", "replace"), pid)
+                            if found:
+                                return found
                             break
                         nxt = urljoin(url, resp.headers.get("location", ""))
                 except httpx.HTTPError as e:
