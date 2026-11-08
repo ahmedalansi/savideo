@@ -169,3 +169,22 @@ def test_share_link_must_stay_on_the_platform():
     with pytest.raises(ApiError) as e:
         expand_share_link(share, None, _redirects({share: (403, None)}))
     assert e.value.code == "platform_down" and is_bot_block(e.value)
+
+
+def test_share_link_page_names_the_video():
+    import httpx
+
+    from app.extractor import expand_share_link
+
+    share = "https://www.facebook.com/share/v/1AbCdEfGh/"
+    page = '<html><head><meta property="og:url" content="https://www.facebook.com/someone/videos/1234567890123456/" /></head></html>'
+    client = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(200, text=page)))
+    assert expand_share_link(share, None, client) == "https://www.facebook.com/someone/videos/1234567890123456/"
+    data = '<script>{"url":"https:\\/\\/www.facebook.com\\/reel\\/987654321098765"}</script>'
+    client = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(200, text=data)))
+    assert expand_share_link(share, None, client) == "https://www.facebook.com/reel/987654321098765"
+    # og:url pointing elsewhere is ignored
+    bad = '<meta property="og:url" content="http://169.254.169.254/videos/1" />'
+    client = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(200, text=bad)))
+    with pytest.raises(ApiError):
+        expand_share_link(share, None, client)
