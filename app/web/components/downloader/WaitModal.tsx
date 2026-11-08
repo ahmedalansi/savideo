@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Check, Download, Music, Video, X } from "lucide-react";
+import { Check, Music, Video, X } from "lucide-react";
 import { useT } from "@/lib/prefs";
 import { WAIT_AD_SECONDS } from "@/lib/monetize";
 import type { MediaFormat } from "@/lib/types";
 import { cx } from "@/lib/cx";
-import { Button, IconButton } from "../ui/Button";
+import { IconButton } from "../ui/Button";
 import { WaitAd } from "./WaitAd";
 
 export interface WaitJob {
@@ -14,24 +14,30 @@ export interface WaitJob {
   trimmed: boolean;
   /** True once the API has answered with a download link. */
   ticketReady: boolean;
-  /** Size text shown when the file is ready, e.g. "about 4.2 MB". */
-  sizeText: string;
 }
 
 const STAGES = 4;
+/** How long the window stays open after the download has started on its own. */
+const CLOSE_AFTER_MS = 3000;
 function stageOf(pct: number) {
   return pct < 10 ? 0 : pct < 55 ? 1 : pct < 92 ? 2 : 3;
 }
 
 /**
  * The window that opens after Download: conversion progress on top, an ad under it.
- * There is no skip: it stays until the wait is over and the API has answered, then offers the file.
+ * There is no skip: it stays until the wait is over and the API has answered, then the
+ * download starts by itself and the window closes a moment later.
  */
-export function WaitModal({ job, onDownload, onClose }: { job: WaitJob | null; onDownload: () => void; onClose: () => void }) {
+export function WaitModal({ job, onReady, onClose }: { job: WaitJob | null; onReady: () => void; onClose: () => void }) {
   const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
   const [elapsed, setElapsed] = useState(0);
   const open = job != null;
+  // Latest callbacks, so the timers below never call a stale one.
+  const onReadyRef = useRef(onReady);
+  const onCloseRef = useRef(onClose);
+  onReadyRef.current = onReady;
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     const d = ref.current;
@@ -56,6 +62,14 @@ export function WaitModal({ job, onDownload, onClose }: { job: WaitJob | null; o
   // Eases toward 95% while waiting; jumps to 100 only when the file can really be handed over.
   const pct = ready ? 100 : Math.min(95, (elapsed / total) * 100);
   const stage = ready ? STAGES : stageOf(pct);
+
+  // Hands the file over the moment it is ready, then closes the window shortly after.
+  useEffect(() => {
+    if (!ready) return;
+    onReadyRef.current();
+    const id = setTimeout(() => onCloseRef.current(), CLOSE_AFTER_MS);
+    return () => clearTimeout(id);
+  }, [ready]);
 
   const audio = job?.format.kind === "audio";
   const merge = !!job?.format.needs_merge;
@@ -154,25 +168,8 @@ export function WaitModal({ job, onDownload, onClose }: { job: WaitJob | null; o
 
           <WaitAd />
 
-          <Button
-            size="lg"
-            disabled={!ready}
-            onClick={onDownload}
-            icon={<Download className="size-5" aria-hidden="true" />}
-            className={cx("w-full", ready && "bg-success hover:bg-success hover:opacity-90")}
-          >
-            {ready ? (
-              <>
-                {t("wait.download")} <span className="sv-ltr text-sm font-medium">{job.sizeText}</span>
-              </>
-            ) : (
-              <>
-                {t("wait.preparing")} <span className="sv-ltr font-mono text-sm tabular-nums">{Math.floor(pct)}%</span>
-              </>
-            )}
-          </Button>
           <p className="text-center text-xs text-muted" aria-live="polite">
-            {ready ? t("wait.readyNote") : t("wait.note")}
+            {ready ? t("wait.starting") : t("wait.note")}
           </p>
         </div>
       )}
