@@ -1,5 +1,5 @@
 "use client";
-import { Camera, Clapperboard, MessageSquare, MonitorPlay, Play, Radio, Tv, Users, type LucideIcon } from "lucide-react";
+import { Camera, Clapperboard, MessageSquare, MonitorPlay, Music2, Play, Radio, Tv, Users, type LucideIcon } from "lucide-react";
 import { PLATFORMS } from "@/lib/platforms";
 import type { PlatformId } from "@/lib/types";
 import { useT } from "@/lib/prefs";
@@ -14,6 +14,7 @@ const GLYPHS: Record<PlatformId, LucideIcon> = {
   bilibili: Tv,
   twitch: Clapperboard,
   instagram: Camera,
+  tiktok: Music2,
 };
 
 export function PlatformGrid() {
@@ -23,7 +24,7 @@ export function PlatformGrid() {
       <h2 id="platforms-title" className="mb-6 text-xl font-bold">
         {t("platforms.title")}
       </h2>
-      <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {PLATFORMS.map((p) => {
           const Icon = GLYPHS[p.id];
           return (

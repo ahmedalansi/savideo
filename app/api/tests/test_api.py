@@ -281,6 +281,12 @@ def test_instagram_reel_resolves(http):
     assert m["formats"]
 
 
+def test_tiktok_short_link_resolves(http):
+    m = resolve(http, "https://vt.tiktok.com/ZSabc123/")
+    assert m["platform"] == "tiktok"
+    assert m["formats"]
+
+
 def test_platform_switch_off_and_stats(http):
     admin = {"Authorization": f"Bearer {ADMIN}"}
     r = http.patch("/v1/admin/platforms/reddit", json={"enabled": False}, headers=admin)

@@ -34,6 +34,8 @@ DEFAULTS: dict[str, Platform] = {
         Platform("dailymotion", "Dailymotion"),
         # Instagram blocks data-centre IPs quickly, so it retries through the proxy like YouTube.
         Platform("instagram", "Instagram", use_proxy=True),
+        # TikTok answers data-centre IPs with "IP address is blocked", so it uses the proxy too.
+        Platform("tiktok", "TikTok", use_proxy=True),
     ]
 }
 
@@ -46,10 +48,12 @@ HOSTS: dict[str, tuple[str, ...]] = {
     "bilibili": ("bilibili.com", "b23.tv"),
     "twitch": ("twitch.tv",),
     "instagram": ("instagram.com", "instagr.am"),
+    # Covers the vt./vm. share links that the TikTok app copies.
+    "tiktok": ("tiktok.com",),
 }
 
 # Query parameters that only track the visitor; dropped so the cache key is stable.
-_TRACKING = re.compile(r"^(utm_.*|si|feature|fbclid|igshid|igsh|ref|ref_src|share_id|s|t|pp)$")
+_TRACKING = re.compile(r"^(utm_.*|si|feature|fbclid|igshid|igsh|ref|ref_src|share_id|s|t|pp|_r|_t|is_from_webapp|sender_device|share_app_id|share_link_id|u_code|tt_from|social_share_type)$")
 
 
 def parse_url(raw: str) -> str | None:
@@ -100,6 +104,8 @@ _ID_PATTERNS: dict[str, list[re.Pattern]] = {
     "twitch": [re.compile(r"/videos/(\d+)"), re.compile(r"/clip/([A-Za-z0-9_-]+)"), re.compile(r"clips\.twitch\.tv/([A-Za-z0-9_-]+)")],
     "facebook": [re.compile(r"/(?:videos|reel|watch/\?v=)/?(\d+)"), re.compile(r"[?&]v=(\d+)")],
     "instagram": [re.compile(r"/(?:p|reels?|tv)/([A-Za-z0-9_-]+)")],
+    # Short vt./vm. links carry no id until they are opened; those get no key here.
+    "tiktok": [re.compile(r"/video/(\d+)"), re.compile(r"/embed(?:/v2)?/(\d+)")],
 }
 
 

@@ -1,7 +1,7 @@
 import pytest
 
 from app.errors import ApiError
-from app.extractor import build_media, classify_error, is_bot_block
+from app.extractor import _source, build_media, classify_error, is_bot_block
 from app.platforms import DEFAULTS, detect_platform, is_playlist, media_key_from_url, normalize, parse_url
 from app.streaming import content_disposition, parse_range, safe_title
 
@@ -98,6 +98,28 @@ def test_instagram_links():
     assert DEFAULTS["instagram"].use_proxy
     blocked = ApiError("platform_down", "[Instagram] C1: Requested content is not available, rate-limit reached or login required")
     assert is_bot_block(blocked)
+
+
+def test_tiktok_links():
+    assert detect_platform(parse_url("https://vt.tiktok.com/ZSabc123/")) == "tiktok"
+    assert detect_platform("https://vm.tiktok.com/ZMabc123/") == "tiktok"
+    assert detect_platform("https://www.tiktok.com/@someone/video/7312345678901234567") == "tiktok"
+    assert detect_platform("https://m.tiktok.com/v/7312345678901234567.html") == "tiktok"
+    assert detect_platform("https://nottiktok.com/@a/video/1") is None
+    assert normalize("https://www.tiktok.com/@a/video/7312345678901234567?is_from_webapp=1&sender_device=pc&_r=1") == "https://tiktok.com/@a/video/7312345678901234567"
+    assert media_key_from_url("https://www.tiktok.com/@a/video/7312345678901234567") == "7312345678901234567"
+    assert media_key_from_url("https://vt.tiktok.com/ZSabc123/") is None
+    assert DEFAULTS["tiktok"].use_proxy
+    assert is_bot_block(ApiError("platform_down", "[TikTok] 73: Your IP address is blocked from accessing this post"))
+
+
+def test_format_cookies_become_a_header():
+    f = {"url": "https://v16.tiktokcdn.com/x.mp4", "http_headers": {"Referer": "https://www.tiktok.com/"},
+         "cookies": "tt_chain_token=abc; Domain=.tiktok.com; Path=/; Secure; Expires=1893456000; msToken=q=z; Domain=.tiktok.com; Path=/"}
+    src = _source(f)
+    assert src["headers"]["Cookie"] == "tt_chain_token=abc; msToken=q=z"
+    assert src["headers"]["Referer"] == "https://www.tiktok.com/"
+    assert "Cookie" not in _source({"url": "https://a.example/x.mp4"})["headers"]
 
 
 def test_filenames():
