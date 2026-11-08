@@ -132,7 +132,7 @@ export function ResultPanel({
     const clip: Clip = { trimmed: trimResult.trimmed, start: trimResult.start, end: trimResult.end };
     const withWait = WAIT_AD_SECONDS > 0;
     setRow(f.format_id, "preparing", label);
-    if (withWait) setWait({ format: f, label, trimmed: clip.trimmed, ticketReady: false, sizeText: sizeText(f) });
+    if (withWait) setWait({ format: f, label, trimmed: clip.trimmed, ticketReady: false });
     try {
       const ticket = await api.createDownload({
         media_id: info.media_id,
@@ -158,14 +158,14 @@ export function ResultPanel({
     }
   };
 
-  const downloadFromWait = () => {
+  // The wait is over: the download starts on its own while the window shows it is starting.
+  const deliverFromWait = () => {
     const p = pending.current;
     pending.current = undefined;
-    setWait(null);
     if (p) deliver(p);
   };
 
-  // Closed once ready without taking the file: the row goes back to Download.
+  // Closed before the file was handed over: the row goes back to Download.
   const closeWait = () => {
     const p = pending.current;
     pending.current = undefined;
@@ -270,7 +270,7 @@ export function ResultPanel({
         </ul>
       </div>
       {Object.values(rows).includes("done") && <DonateThanks />}
-      <WaitModal job={wait} onDownload={downloadFromWait} onClose={closeWait} />
+      <WaitModal job={wait} onReady={deliverFromWait} onClose={closeWait} />
     </section>
   );
 }

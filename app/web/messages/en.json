@@ -326,9 +326,7 @@
       "check": "Checking file",
       "finish": "Finishing"
     },
-    "download": "Download file",
-    "preparing": "Preparing",
     "note": "The ad keeps changing until your file is ready",
-    "readyNote": "Your file is ready. Press Download file."
+    "starting": "Your download is starting…"
   }
 }
