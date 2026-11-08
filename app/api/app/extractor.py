@@ -101,7 +101,7 @@ def classify_error(message: str) -> str:
 
 
 def is_bot_block(err: ApiError) -> bool:
-    return err.code == "platform_down" and bool(re.search(r"bot|429|too many|403|rate.?limit|login required", err.message.lower()))
+    return err.code == "platform_down" and bool(re.search(r"bot|429|too many|403|rate.?limit|login required|ip address is blocked", err.message.lower()))
 
 
 # ---- info dict -> MediaInfo -------------------------------------------------
@@ -143,12 +143,33 @@ def _size(f: dict, duration: float) -> int | None:
     return None
 
 
+_COOKIE_ATTRS = {"domain", "path", "secure", "expires", "version", "httponly", "max-age", "samesite"}
+
+
+def _cookie_header(cookies: str | None) -> str | None:
+    """yt-dlp's per-format `cookies` field ("a=1; Domain=..; Path=/; b=2") as a Cookie header.
+
+    yt-dlp no longer puts Cookie in http_headers. TikTok's video URLs answer 403
+    without the cookie it set during extraction, so it has to travel with the format.
+    """
+    pairs = []
+    for part in (cookies or "").split(";"):
+        name, eq, value = part.strip().partition("=")
+        if eq and name and name.lower() not in _COOKIE_ATTRS:
+            pairs.append(f"{name}={value}")
+    return "; ".join(pairs) or None
+
+
 def _source(f: dict) -> dict:
     """What we need later to fetch this format: URL, headers, protocol, chunking."""
     chunk = (f.get("downloader_options") or {}).get("http_chunk_size")
+    headers = dict(f.get("http_headers") or {})
+    cookie = _cookie_header(f.get("cookies"))
+    if cookie:
+        headers["Cookie"] = cookie
     return {
         "url": f["url"],
-        "headers": f.get("http_headers") or {},
+        "headers": headers,
         "protocol": f.get("protocol") or "https",
         "chunk": int(chunk) if chunk else None,
     }
