@@ -68,6 +68,7 @@ def test_live_and_playlist_refused():
     ("ERROR: [youtube] x: This live event will begin in 3 hours.", "live_stream"),
     ("ERROR: [youtube] x: The uploader has not made this video available in your country", "geo_blocked"),
     ("ERROR: [Instagram] C1: Requested content is not available, rate-limit reached or login required", "platform_down"),
+    ("ERROR: No suitable extractor found for URL https://www.facebook.com/share/v/1A/", "removed_video"),
     ("something odd", "platform_down"),
 ])
 def test_classify_error(msg, code):
@@ -130,3 +131,41 @@ def test_filenames():
     assert parse_range("bytes=10-") == (10, None)
     assert parse_range("bytes=10-5") is None
     assert parse_range("bytes=-500") is None
+
+
+def _redirects(table: dict[str, tuple[int, str | None]]):
+    import httpx
+
+    def handler(req: httpx.Request) -> httpx.Response:
+        status, loc = table.get(str(req.url), (200, None))
+        return httpx.Response(status, headers={"location": loc} if loc else {})
+
+    return httpx.Client(transport=httpx.MockTransport(handler), follow_redirects=False)
+
+
+def test_share_links_are_expanded():
+    from app.extractor import expand_share_link, has_extractor
+
+    share = "https://www.facebook.com/share/v/1AbCdEfGh/"
+    assert not has_extractor(share)
+    real = "https://www.facebook.com/someone/videos/1234567890123456/"
+    assert expand_share_link(share, None, _redirects({share: (302, real)})) == real
+    # Logged-out visitors are sent to the login page with the real link in ?next=
+    login = "https://www.facebook.com/login/?next=" + real.replace("/", "%2F").replace(":", "%3A")
+    assert expand_share_link(share, None, _redirects({share: (302, login)})) == real
+    reel = "https://www.facebook.com/reel/1234567890123456"
+    assert expand_share_link("https://fb.watch/abcDEF/", None, _redirects({"https://fb.watch/abcDEF/": (301, reel)})) == reel
+    # A known link is returned as is, with no request.
+    assert expand_share_link(real, None, _redirects({})) == real
+
+
+def test_share_link_must_stay_on_the_platform():
+    from app.extractor import expand_share_link
+
+    share = "https://www.facebook.com/share/v/1AbCdEfGh/"
+    with pytest.raises(ApiError) as e:
+        expand_share_link(share, None, _redirects({share: (302, "http://169.254.169.254/latest")}))
+    assert e.value.code == "removed_video"
+    with pytest.raises(ApiError) as e:
+        expand_share_link(share, None, _redirects({share: (403, None)}))
+    assert e.value.code == "platform_down" and is_bot_block(e.value)

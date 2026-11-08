@@ -10,11 +10,13 @@ import re
 import shutil
 import tempfile
 from typing import Any, Protocol
+from urllib.parse import parse_qs, urljoin, urlsplit
 
 import anyio
+import httpx
 
 from .errors import ApiError
-from .platforms import Platform
+from .platforms import Platform, detect_platform
 
 AUDIO_BITRATES = (192, 128)
 STREAMABLE = {"http", "https", "m3u8", "m3u8_native"}
@@ -24,6 +26,61 @@ _CODEC_RANK = {"avc1": 0, "h264": 0, "av01": 1, "vp09": 2, "vp9": 2}
 class Extractor(Protocol):
     async def extract(self, url: str, proxy: str | None) -> dict[str, Any]: ...
     async def extract_playlist(self, url: str, proxy: str | None, limit: int) -> dict[str, Any]: ...
+
+
+_BROWSER_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+_MAX_HOPS = 5
+
+
+def has_extractor(url: str) -> bool:
+    """True when a yt-dlp extractor other than the (disabled) generic one claims this link."""
+    from yt_dlp.extractor import gen_extractor_classes
+
+    return any(ie.ie_key() != "Generic" and ie.suitable(url) for ie in gen_extractor_classes())
+
+
+def _next_from_login(url: str) -> str | None:
+    """Facebook sends logged-out visitors to /login/?next=<the real link>."""
+    p = urlsplit(url)
+    if "login" in p.path:
+        nxt = parse_qs(p.query).get("next", [None])[0]
+        if nxt and nxt.startswith("http"):
+            return nxt
+    return None
+
+
+def expand_share_link(url: str, proxy: str | None, client: httpx.Client | None = None) -> str:
+    """Follow the redirects of a share link (facebook.com/share/v/.., fb.watch, reddit /s/..)
+    until yt-dlp knows the link. The apps copy these, and only the generic extractor,
+    which is off, would follow them. Every hop must stay on the same platform's hosts,
+    so this cannot be pointed at other addresses."""
+    pid = detect_platform(url)
+    own = client is None
+    http = client or httpx.Client(follow_redirects=False, timeout=10, proxy=proxy, headers={"User-Agent": _BROWSER_UA})
+    try:
+        for _ in range(_MAX_HOPS):
+            if has_extractor(url):
+                return url
+            nxt = _next_from_login(url)
+            if not nxt:
+                try:
+                    with http.stream("GET", url) as resp:
+                        if resp.status_code in (403, 429):
+                            raise ApiError("platform_down", f"HTTP Error {resp.status_code} while opening share link")
+                        if not resp.is_redirect:
+                            break
+                        nxt = urljoin(url, resp.headers.get("location", ""))
+                except httpx.HTTPError as e:
+                    raise ApiError("platform_down", f"share link: {e}"[:300]) from e
+            if urlsplit(nxt).scheme not in ("http", "https") or detect_platform(nxt) != pid:
+                break
+            url = nxt
+        if has_extractor(url):
+            return url
+    finally:
+        if own:
+            http.close()
+    raise ApiError("removed_video", "no extractor for this link, even after following its redirects")
 
 
 class YtDlpExtractor:
@@ -72,8 +129,13 @@ class YtDlpExtractor:
             if jar:
                 os.unlink(jar)
 
+    def _expand_and_run(self, url: str, proxy: str | None) -> dict[str, Any]:
+        if not has_extractor(url):
+            url = expand_share_link(url, proxy)
+        return self._run(url, self._opts(proxy))
+
     async def extract(self, url: str, proxy: str | None) -> dict[str, Any]:
-        return await anyio.to_thread.run_sync(self._run, url, self._opts(proxy))
+        return await anyio.to_thread.run_sync(self._expand_and_run, url, proxy)
 
     async def extract_playlist(self, url: str, proxy: str | None, limit: int) -> dict[str, Any]:
         opts = self._opts(proxy) | {"noplaylist": False, "extract_flat": "in_playlist", "playlistend": limit}
@@ -88,6 +150,7 @@ _ERROR_RULES: list[tuple[str, str]] = [
     (r"live event will begin|premieres in|is_live|this live event|is live", "live_stream"),
     (r"video unavailable|has been removed|no longer available|does not exist|not found|404|deleted|terminated", "removed_video"),
     (r"unsupported url", "unsupported_site"),
+    (r"no suitable extractor", "removed_video"),
     (r"no video formats found|no video could be found|there'?s no video", "removed_video"),
 ]
 
