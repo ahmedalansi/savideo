@@ -17,8 +17,7 @@ export interface WaitJob {
 }
 
 const STAGES = 4;
-/** How long the window stays open after the download has started on its own. */
-const CLOSE_AFTER_MS = 3000;
+
 function stageOf(pct: number) {
   return pct < 10 ? 0 : pct < 55 ? 1 : pct < 92 ? 2 : 3;
 }
@@ -26,18 +25,16 @@ function stageOf(pct: number) {
 /**
  * The window that opens after Download: conversion progress on top, an ad under it.
  * There is no skip: it stays until the wait is over and the API has answered, then the
- * download starts by itself and the window closes a moment later.
+ * download starts by itself. The window stays open until the visitor closes it.
  */
 export function WaitModal({ job, onReady, onClose }: { job: WaitJob | null; onReady: () => void; onClose: () => void }) {
   const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
   const [elapsed, setElapsed] = useState(0);
   const open = job != null;
-  // Latest callbacks, so the timers below never call a stale one.
+  // Latest callback, so the effect below never calls a stale one.
   const onReadyRef = useRef(onReady);
-  const onCloseRef = useRef(onClose);
   onReadyRef.current = onReady;
-  onCloseRef.current = onClose;
 
   useEffect(() => {
     const d = ref.current;
@@ -63,12 +60,9 @@ export function WaitModal({ job, onReady, onClose }: { job: WaitJob | null; onRe
   const pct = ready ? 100 : Math.min(95, (elapsed / total) * 100);
   const stage = ready ? STAGES : stageOf(pct);
 
-  // Hands the file over the moment it is ready, then closes the window shortly after.
+  // Hands the file over the moment it is ready.
   useEffect(() => {
-    if (!ready) return;
-    onReadyRef.current();
-    const id = setTimeout(() => onCloseRef.current(), CLOSE_AFTER_MS);
-    return () => clearTimeout(id);
+    if (ready) onReadyRef.current();
   }, [ready]);
 
   const audio = job?.format.kind === "audio";
@@ -168,9 +162,11 @@ export function WaitModal({ job, onReady, onClose }: { job: WaitJob | null; onRe
 
           <WaitAd />
 
-          <p className="text-center text-xs text-muted" aria-live="polite">
-            {ready ? t("wait.starting") : t("wait.note")}
-          </p>
+          {!ready && (
+            <p className="text-center text-xs text-muted" aria-live="polite">
+              {t("wait.note")}
+            </p>
+          )}
         </div>
       )}
     </dialog>
